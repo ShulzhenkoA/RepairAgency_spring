@@ -21,7 +21,7 @@
             <div class="col-md-1">
                 <cust:entity-page-counter loop_count_num="${loop_num}"
                                           page_num="${param.page}"
-                                          entities_page_amount="${PaginationConstants.USERS_FOR_PAGE.amount}"/>
+                                          entities_page_amount="${PaginationConstants.USERS_FOR_PAGE}"/>
             </div>
             <div class="${user.role eq Role.ADMIN ? 'col-md-2' : 'col-md-3'}">
                     ${user_for_mapping.firstName}
@@ -64,7 +64,7 @@
                                 <div class="modal-footer">
                                     <form action="${pageContext.request.contextPath}${CRAPaths.DELETE_USER}" method="post">
                                         <div class="col-sm-6 offset-sm-3 submit-button">
-                                            <input type="hidden" name="deleting_user_id" value="${user_for_mapping.id}">
+                                            <input type="hidden" name="userId" value="${user_for_mapping.id}">
                                             <button type="submit" class="btn"><fmt:message key="cra.user_info.yes"/></button>
                                         </div>
                                     </form>

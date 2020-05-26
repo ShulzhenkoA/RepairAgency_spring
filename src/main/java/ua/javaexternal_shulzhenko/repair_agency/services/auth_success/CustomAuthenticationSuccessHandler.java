@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
-
-import static ua.javaexternal_shulzhenko.repair_agency.services.database.UsersDBService.getUserInfoByEmail;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +21,7 @@ import java.util.Collection;
 @Service
 @Getter
 @Setter
-public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public final class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -37,15 +34,16 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     }
 
     private void setUserInfoToSession(HttpServletRequest req, Authentication authentication) {
-        User user = retrieveUser(authentication);
+        User user = (User) authentication.getPrincipal();
+        User userInfo = User
+                .builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .role(user.getRole())
+                .build();
         HttpSession session = req.getSession();
-        session.setAttribute(Attributes.USER, user);
-    }
-
-    private User retrieveUser(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
-        return getUserInfoByEmail(email);
+        session.setAttribute(Attributes.USER, userInfo);
     }
 
     private String defineTargetUrl(Authentication authentication) {

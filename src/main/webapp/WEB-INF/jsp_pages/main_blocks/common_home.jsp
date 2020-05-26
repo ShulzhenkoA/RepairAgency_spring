@@ -11,43 +11,43 @@
 <div class="container" id="aboutUs">
     <div class="col-md-10 offset-md-1 rounded page-content">
         <div class="row">
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">1</span> <fmt:message
-                    key="cra.home_common.about_us.first"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">1</span>
+                <fmt:message key="cra.home_common.about_us.first"/>
             </div>
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">6</span> <fmt:message
-                    key="cra.home_common.about_us.six"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">2</span> <fmt:message
-                    key="cra.home_common.about_us.second"/>
-            </div>
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">7</span> <fmt:message
-                    key="cra.home_common.about_us.seventh"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">6</span>
+                <fmt:message key="cra.home_common.about_us.six"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">3</span> <fmt:message
-                    key="cra.home_common.about_us.third"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">2</span>
+                <fmt:message key="cra.home_common.about_us.second"/>
             </div>
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">8</span> <fmt:message
-                    key="cra.home_common.about_us.eighth"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">4</span> <fmt:message
-                    key="cra.home_common.about_us.fourth"/>
-            </div>
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">9</span> <fmt:message
-                    key="cra.home_common.about_us.ninth"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">7</span>
+                <fmt:message key="cra.home_common.about_us.seventh"/>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">5</span> <fmt:message
-                    key="cra.home_common.about_us.fifth"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">3</span>
+                <fmt:message key="cra.home_common.about_us.third"/>
             </div>
-            <div class="col-md-6"><span class="badge badge-pill badge-dark">10</span> <fmt:message
-                    key="cra.home_common.about_us.tenth"/>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">8</span>
+                <fmt:message key="cra.home_common.about_us.eighth"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">4</span>
+                <fmt:message key="cra.home_common.about_us.fourth"/>
+            </div>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">9</span>
+                <fmt:message key="cra.home_common.about_us.ninth"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">5</span>
+                <fmt:message key="cra.home_common.about_us.fifth"/>
+            </div>
+            <div class="col-md-6"><span class="badge badge-pill badge-dark">10</span>
+                <fmt:message key="cra.home_common.about_us.tenth"/>
             </div>
         </div>
     </div>

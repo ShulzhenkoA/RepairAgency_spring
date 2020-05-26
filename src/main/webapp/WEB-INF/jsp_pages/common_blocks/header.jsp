@@ -17,7 +17,6 @@
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <span class="navbar-text"><fmt:message key="cra.header.site_title"/></span>
-        ${user.firstName} ${user.lastName}
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <div class="dropdown dropleft">
@@ -38,6 +37,7 @@
                     </div>
                 </div>
             </li>
+
             <security:authorize access="isAnonymous()">
                 <c:if test="${requestScope['javax.servlet.forward.servlet_path'] ne CRAPaths.LOGIN and
                                requestScope['javax.servlet.forward.servlet_path'] ne CRAPaths.REGISTRATION}">
@@ -60,9 +60,11 @@
                     </li>
                 </c:if>
             </security:authorize>
+
             <security:authorize access="isAuthenticated()">
                 <cust:info_logout/>
             </security:authorize>
+
         </ul>
     </div>
 </nav>

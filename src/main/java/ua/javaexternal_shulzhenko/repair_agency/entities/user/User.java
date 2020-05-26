@@ -5,16 +5,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -42,8 +41,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<Role> roles = Arrays.asList(role);
-        return roles;
+        return Collections.singletonList(role);
     }
 
     @Override

@@ -12,7 +12,6 @@ import ua.javaexternal_shulzhenko.repair_agency.constants.Parameters;
 
 import java.util.Locale;
 
-
 @Configuration
 public class CraMVConfiguration  implements WebMvcConfigurer {
 

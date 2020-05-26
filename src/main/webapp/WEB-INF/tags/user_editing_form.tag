@@ -1,8 +1,7 @@
 <%@ tag pageEncoding="UTF-8" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.user.Role" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
-<%@ attribute name="user_for_editing"
-              type="java.lang.Object" %>
+<%@ attribute name="user_for_editing" type="java.lang.Object" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -17,32 +16,32 @@
                     <h4 class="modal-title"><fmt:message key="cra.user_edit.header"/></h4>
                 </div>
                 <div class="modal-body">
-                    <c:if test="${inconsistencies.contains('firstName')}">
+                    <c:if test="${bindingResult.hasFieldErrors('firstName')}">
                         <p class="formError">
                             <fmt:message key="cra.user_edit.inconsistencies.f_name"/>
                         </p>
                     </c:if>
                     <div class="form-group">
                         <input type="text" class="form-control" required
-                               placeholder="<fmt:message key="cra.user_edit.ent_f_name"/>" name="fName"
+                               placeholder="<fmt:message key="cra.user_edit.ent_f_name"/>" name="firstName"
                                value="${user_for_editing.firstName}">
                     </div>
-                    <c:if test="${inconsistencies.contains('lastName')}">
+                    <c:if test="${bindingResult.hasFieldErrors('lastName')}">
                         <p class="formError">
                             <fmt:message key="cra.user_edit.inconsistencies.l_name"/>
                         </p>
                     </c:if>
                     <div class="form-group">
                         <input type="text" class="form-control" required
-                               placeholder="<fmt:message key="cra.user_edit.ent_l_name"/>" name="lName"
+                               placeholder="<fmt:message key="cra.user_edit.ent_l_name"/>" name="lastName"
                                value="${user_for_editing.lastName}">
                     </div>
-                    <c:if test="${inconsistencies.contains('email')}">
+                    <c:if test="${bindingResult.hasFieldErrors('email')}">
                         <p class="formError">
                             <fmt:message key="cra.user_edit.inconsistencies.email"/>
                         </p>
                     </c:if>
-                    <c:if test="${inconsistencies.contains('notFreeEmail')}">
+                    <c:if test="${notFreeEmail ne null}">
                         <p class="formError">
                             <fmt:message key="cra.user_edit.inconsistencies.not_free_em"/>
                         </p>
@@ -61,7 +60,7 @@
                                 ${user_for_editing.role eq Role.MANAGER ? 'checked' : ''}><fmt:message key="cra.user_edit.man"/>
                         </div>
                     </div>
-                    <input type="hidden" name="editing_user_id" value="${user_for_editing.id}">
+                    <input type="hidden" name="id" value="${user_for_editing.id}">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn"><fmt:message key="cra.user_edit.edit"/></button>

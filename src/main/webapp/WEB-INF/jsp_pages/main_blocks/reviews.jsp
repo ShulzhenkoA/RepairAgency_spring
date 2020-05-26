@@ -10,15 +10,18 @@
 <fmt:setBundle basename="cra_language"/>
 
 <div class="col-md-12">
+
     <security:authorize access="!isAnonymous() and !hasAuthority('CUSTOMER')">
         <div class="col-md-8 red-mess"><fmt:message key="cra.reviews.only_cus"/></div>
     </security:authorize>
+
     <security:authorize access="isAnonymous()">
         <div class="col-md-8 red-mess"><fmt:message key="cra.reviews.log_in"/></div>
     </security:authorize>
+
     <security:authorize access="hasAuthority('CUSTOMER')">
         <c:if test="${success eq null}">
-            <c:if test="${inconsistencies.contains('reviewContent')}">
+            <c:if test="${bindingResult.hasFieldErrors('reviewContent')}">
                 <p class="formError">
                     <fmt:message key="cra.reviews.inconsistencies.you_can't"/>
                 </p>
@@ -26,7 +29,6 @@
             <form action="${pageContext.request.contextPath}${CRAPaths.REVIEWS}" method="post">
                 <textarea id="review-textarea" class="form-control" name="reviewContent" required
                           placeholder="<fmt:message key="cra.reviews.comment_area_pl"/>"></textarea>
-                <input type="hidden" name="customerID" value="${user.id}">
                 <div class="col-md-4 offset-md-8">
                     <button type="submit" class="btn btn-block">
                         <fmt:message key="cra.reviews.leave_review_btn"/></button>

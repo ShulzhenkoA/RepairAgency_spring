@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
+import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRA_JSPFiles;
 
 import javax.servlet.RequestDispatcher;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ErrorsCustomViewController implements ErrorController {
 
-    @RequestMapping("/error")
+    @RequestMapping(CRAPaths.ERROR)
     public String handelError(HttpServletRequest req){
 
         Object stCode = req.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -24,7 +25,7 @@ public class ErrorsCustomViewController implements ErrorController {
 
             int code = Integer.parseInt(stCode.toString());
 
-            if(code == HttpStatus.NOT_FOUND.value()){
+            if(code == HttpStatus.NOT_FOUND.value() || code == HttpStatus.FORBIDDEN.value()){
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE404);
             } else {
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE500);
@@ -37,6 +38,6 @@ public class ErrorsCustomViewController implements ErrorController {
 
     @Override
     public String getErrorPath() {
-        return "/error";
+        return CRAPaths.ERROR;
     }
 }

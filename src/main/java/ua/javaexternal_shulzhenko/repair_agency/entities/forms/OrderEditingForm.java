@@ -1,63 +1,25 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import ua.javaexternal_shulzhenko.repair_agency.constants.Parameters;
-import ua.javaexternal_shulzhenko.repair_agency.constants.OrderStatus;
+import lombok.Getter;
+import lombok.Setter;
+import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
-public class OrderEditingForm implements Form{
+@Getter
+@Setter
+public class OrderEditingForm {
 
-    private final int id;
+    private int id;
 
+    @Pattern(regexp = "^\\d+((\\.|,)\\d{1,2})?$")
+    private String price;
 
-    private final String price;
-    private final String masterID;
-    private final OrderStatus status;
+    private int masterID;
 
-    private final String managerComment;
+    private OrderStatus status;
 
-    public OrderEditingForm(HttpServletRequest req) {
-        id = extractId(req);
-        price = req.getParameter(Parameters.PRICE);
-        masterID = req.getParameter(Parameters.MASTER_ID);
-        status = extractStatus(req);
-        managerComment = req.getParameter(Parameters.MANAGER_COMMENT);
-    }
-
-    private int extractId(HttpServletRequest req) {
-        String id = req.getParameter(Parameters.EDITING_ORDER_ID);
-        if(id != null){
-            return Integer.parseInt(id);
-        }
-        return 0;
-    }
-
-    private OrderStatus extractStatus(HttpServletRequest req) {
-        String status = req.getParameter(Parameters.STATUS);
-        if(status != null){
-            return OrderStatus.valueOf(status);
-        }
-        return null;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public String  getMasterID() {
-        return masterID;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public String getManagerComment() {
-        return managerComment;
-    }
-
+    @NotBlank
+    private String managerComment;
 }

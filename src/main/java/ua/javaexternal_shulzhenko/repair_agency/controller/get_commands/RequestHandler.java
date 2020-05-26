@@ -1,4 +1,4 @@
-package ua.javaexternal_shulzhenko.repair_agency.controller.commands;
+package ua.javaexternal_shulzhenko.repair_agency.controller.get_commands;
 
 import org.springframework.ui.Model;
 

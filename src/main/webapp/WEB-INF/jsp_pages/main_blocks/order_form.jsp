@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="cust" %>
-<%@ page import="ua.javaexternal_shulzhenko.repair_agency.constants.RepairType" %>
+<%@ page import="ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType" %>
 
 <fmt:setLocale value="${pageContext.response.locale}"/>
 <fmt:setBundle basename="cra_language"/>
@@ -14,39 +14,39 @@
             <form action="${pageContext.request.contextPath}${CRAPaths.CREATE_ORDER}" method="post">
                 <h3><fmt:message key="cra.repair_order.header"/></h3>
                 <div class="col-lg-12 form-group">
-                    <c:if test="${inconsistencies.contains('carBrand')}">
+                    <c:if test="${bindingResult.hasFieldErrors('carBrand')}">
                         <p class="formError">
                             <fmt:message key="cra.order_form.inconsistencies.brand"/>
                         </p>
                     </c:if>
-                    <input type="text" class="form-control" required placeholder="<fmt:message key="cra.order_form.car_brand"/>" name="car_brand"
+                    <input type="text" class="form-control" required placeholder="<fmt:message key="cra.order_form.car_brand"/>" name="carBrand"
                            value="${prevForm.carBrand}">
                 </div>
                 <div class="col-lg-12 form-group">
-                    <c:if test="${inconsistencies.contains('carModel')}">
+                    <c:if test="${bindingResult.hasFieldErrors('carModel')}">
                         <p class="formError">
                             <fmt:message key="cra.order_form.inconsistencies.model"/>
                         </p>
                     </c:if>
-                    <input type="text" class="form-control" required placeholder="<fmt:message key="cra.order_form.car_model"/>" name="car_model"
+                    <input type="text" class="form-control" required placeholder="<fmt:message key="cra.order_form.car_model"/>" name="carModel"
                            value="${prevForm.carModel}">
                 </div>
                 <div class="col-lg-5 form-group">
-                    <c:if test="${inconsistencies.contains('carYear')}">
+                    <c:if test="${bindingResult.hasFieldErrors('carYear')}">
                         <p class="formError">
                             <fmt:message key="cra.order_form.inconsistencies.year"/>
                         </p>
                     </c:if>
                     <input type="text" class="form-control" required placeholder="<fmt:message key="cra.order_form.car_year"/>"
-                           name="car_year" value="${prevForm.carYear}">
+                           name="carYear" value="${prevForm.carYear}">
                 </div>
                 <div class="col-lg-5 form-group">
-                    <c:if test="${inconsistencies.contains('repairType')}">
+                    <c:if test="${bindingResult.hasFieldErrors('repairType')}">
                         <p class="formError">
                             <fmt:message key="cra.order_form.inconsistencies.rep_type"/>
                         </p>
                     </c:if>
-                    <select name="repair_type" class="custom-select mb-3">
+                    <select name="repairType" class="custom-select mb-3">
                         <c:choose>
                             <c:when test="${prevForm.repairType eq null}">
                                 <option selected><fmt:message key="cra.order_form.rep_type"/></option>
@@ -86,12 +86,12 @@
                     </select>
                 </div>
                 <div class="col-lg-12 form-group">
-                    <c:if test="${inconsistencies.contains('repairDescription')}">
+                    <c:if test="${bindingResult.hasFieldErrors('repairDescription')}">
                         <p class="formError">
                             <fmt:message key="cra.order_form.inconsistencies.rep_desc"/>
                         </p>
                     </c:if>
-                    <textarea class="form-control" name="repair_description"
+                    <textarea class="form-control" name="repairDescription"
                               placeholder="<fmt:message key="cra.order_form.rep_desc"/>">${prevForm.repairDescription}</textarea>
                 </div>
                 <div id="order_footer" class="col-lg-12 row">

@@ -3,6 +3,7 @@
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <fmt:setLocale value="${pageContext.response.locale}"/>
 <fmt:setBundle basename="cra_language"/>
@@ -33,32 +34,32 @@
                                 ${pageContext.request.contextPath}${CRAPaths.REGISTRATION}
                             </c:otherwise>
                         </c:choose>" method="post">
-                        <c:if test="${inconsistencies.contains('firstName')}">
+                        <c:if test="${bindingResult.hasFieldErrors('firstName')}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.f_name"/>
                             </p>
                         </c:if>
                         <div class="form-group">
                             <input type="text" class="form-control" required
-                                   placeholder="<fmt:message key="cra.reg_form.f_name_pl"/>" name="fName"
+                                   placeholder="<fmt:message key="cra.reg_form.f_name_pl"/>" name="firstName"
                                    value="${prevForm.firstName}">
                         </div>
-                        <c:if test="${inconsistencies.contains('lastName')}">
+                        <c:if test="${bindingResult.hasFieldErrors('lastName')}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.l_name"/>
                             </p>
                         </c:if>
                         <div class="form-group">
                             <input type="text" class="form-control" required
-                                   placeholder="<fmt:message key="cra.reg_form.l_name_pl"/>" name="lName"
+                                   placeholder="<fmt:message key="cra.reg_form.l_name_pl"/>" name="lastName"
                                    value="${prevForm.lastName}">
                         </div>
-                        <c:if test="${inconsistencies.contains('email')}">
+                        <c:if test="${bindingResult.hasFieldErrors('email')}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.email"/>
                             </p>
                         </c:if>
-                        <c:if test="${inconsistencies.contains('notFreeEmail')}">
+                        <c:if test="${notFreeEmail ne null}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.not_free_email"/>
                             </p>
@@ -68,28 +69,28 @@
                                    value="${prevForm.email}">
                         </div>
 
-                        <c:if test="${inconsistencies.contains('password')}">
+                        <c:if test="${bindingResult.hasFieldErrors('password')}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.pass"/>
                             </p>
                         </c:if>
                         <div class="form-group">
                             <input type="password" class="form-control" required
-                                   placeholder="<fmt:message key="cra.reg_form.pass_pl"/>" name="pass">
+                                   placeholder="<fmt:message key="cra.reg_form.pass_pl"/>" name="password">
                         </div>
-                        <c:if test="${inconsistencies.contains('passwordConfirmation')}">
+                        <c:if test="${wrongPasswordConfirmation ne null}">
                             <p class="formError">
                                 <fmt:message key="cra.reg_form.inc.pass_conf"/>
                             </p>
                         </c:if>
                         <div class="form-group">
                             <input type="password" class="form-control" required
-                                   placeholder="<fmt:message key="cra.reg_form.pass_conf_pl"/>" name="passConf">
+                                   placeholder="<fmt:message key="cra.reg_form.pass_conf_pl"/>" name="passwordConfirmation">
                         </div>
                         <c:choose>
                             <c:when test="${user.role.name() eq Role.ADMIN}">
                                 <div class="form-group reg_radio">
-                                    <c:if test="${inconsistencies.contains('role')}">
+                                    <c:if test="${bindingResult.hasFieldErrors('role')}">
                                         <p class="formError">
                                             <fmt:message key="cra.reg_form.inc.role"/>
                                         </p>

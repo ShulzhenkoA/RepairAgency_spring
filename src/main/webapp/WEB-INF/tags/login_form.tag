@@ -28,15 +28,15 @@
             <form action="${pageContext.request.contextPath}${CRAPaths.LOGIN}" method="post">
                 <div class="form-group">
                     <input type="text" class="form-control" required placeholder="E-mail" name="email"
-                           value="${requestScope['org.springframework.validation.BindingResult.loginForm'].getFieldValue('email')}">
+                           value="${prevEmail}">
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" required
                            placeholder="<fmt:message key="cra.login_form.pass_pl"/>" name="password">
                 </div>
                 <div class="col-sm-6 offset-sm-3 submit-button">
-                    <button type="submit" class="btn btn-block"><fmt:message
-                            key="cra.login_form.login_btn"/></button>
+                    <button type="submit" class="btn btn-block">
+                        <fmt:message key="cra.login_form.login_btn"/></button>
                 </div>
             </form>
         </div>

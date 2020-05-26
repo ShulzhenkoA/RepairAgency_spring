@@ -17,7 +17,7 @@ public class PagePaginationHandler{
         int totalPages = page.getTotalPages();
         int currentPageNum = page.getNumber() + 1;
 
-        if (totalPages < 1) {
+        if (totalPages < 2) {
             return null;
         }
 

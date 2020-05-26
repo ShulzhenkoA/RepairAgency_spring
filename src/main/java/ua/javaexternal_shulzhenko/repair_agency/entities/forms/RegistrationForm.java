@@ -1,68 +1,52 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
-import ua.javaexternal_shulzhenko.repair_agency.constants.Parameters;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
+import static ua.javaexternal_shulzhenko.repair_agency.services.encoding.PasswordEncodingService.*;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+@Getter
+@Setter
+public class RegistrationForm {
 
-public class RegistrationForm implements Form {
+    @Pattern(regexp = "^[\\p{L}](?=.*[\\p{L}])[- '\\p{L}]{1,63}")
+    private String firstName;
 
+    @Pattern(regexp = "^[\\p{L}](?=.*[\\p{L}])[- '\\p{L}]{1,63}")
+    private String lastName;
 
-    private final String firstName;
+    @Pattern(regexp = "[A-Za-z0-9._-]+@[A-Za-z0-9._-]+\\.[a-z]{2,4}")
+    private String email;
 
-    private final String lastName;
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,20}$")
+    private String password;
 
-    private final String email;
+    private String passwordConfirmation;
 
-    private final String password;
+    @NotNull
+    private Role role;
 
-    private final String passwordConfirmation;
-
-    private final Role role;
-
-    public RegistrationForm(HttpServletRequest req) {
-        firstName = req.getParameter(Parameters.F_NAME);
-        lastName = req.getParameter(Parameters.L_NAME);
-        email = req.getParameter(Parameters.EMAIL);
-        password = req.getParameter(Parameters.PASS);
-        passwordConfirmation = req.getParameter(Parameters.PASS_CONF);
-        role = extractRole(req);
+    public boolean confirmationPassMatch(){
+        return password.equals(passwordConfirmation);
     }
 
-    private Role extractRole(HttpServletRequest req) {
-        String role = req.getParameter(Parameters.ROLE);
-        if(role != null){
-            return Role.valueOf(role);
-        }
-        return null;
-    }
+    public User extractUser(){
 
+        BCryptPasswordEncoder bCryptPasswordEncoder = gerBCryptPasswordEncoder();
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPasswordConfirmation() {
-        return passwordConfirmation;
-    }
-
-    public Role getRole() {
-        return role;
+        return User
+                .builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .password(bCryptPasswordEncoder.encode(password))
+                .role(role)
+                .build();
     }
 }

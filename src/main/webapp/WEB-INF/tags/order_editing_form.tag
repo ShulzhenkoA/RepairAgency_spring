@@ -1,8 +1,7 @@
 <%@ tag pageEncoding="UTF-8" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.OrderStatus" %>
+<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
-<%@ attribute name="order_for_editing"
-              type="java.lang.Object" %>
+<%@ attribute name="order_for_editing" type="java.lang.Object" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="frm" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -19,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <c:if test="${inconsistencies.contains('price')}">
+                        <c:if test="${bindingResult.hasFieldErrors('price') or price ne null}">
                             <p class="formError">
                                 <fmt:message key="cra.ord_edit.inconsistencies.spec_price"/>
                             </p>
@@ -29,7 +28,7 @@
                                value="${order_for_editing.price ne null ? order_for_editing.price : 0}">
                     </div>
                     <div class="form-group">
-                        <c:if test="${inconsistencies.contains('master')}">
+                        <c:if test="${master ne null}">
                             <p class="formError">
                                 <fmt:message key="cra.ord_edit.inconsistencies.ch_mas"/>
                             </p>
@@ -115,7 +114,7 @@
                         </c:if>
                     </div>
                     <div class="form-group">
-                        <c:if test="${inconsistencies.contains('managerComment')}">
+                        <c:if test="${bindingResult.hasFieldErrors('managerComment')}">
                             <p class="formError">
                                 <fmt:message key="cra.ord_edit.inconsistencies.com"/>
                             </p>
@@ -123,7 +122,7 @@
                         <textarea class="form-control" rows="4" required name="managerComment"
                                   placeholder="<frm:message key="cra.ord_edit.leave_comm"/>">${order_for_editing.managerComment}</textarea>
                     </div>
-                    <input type="hidden" name="editing_order_id" value="${order_for_editing.id}">
+                    <input type="hidden" name="id" value="${order_for_editing.id}">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn"><fmt:message key="cra.ord_edit.edit"/></button>

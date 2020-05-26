@@ -2,7 +2,6 @@ package ua.javaexternal_shulzhenko.repair_agency.constants;
 
 public interface CRA_JSPFiles {
     String CORE_PAGE = "core_page";
-    String CORE_PAGE_FULL = "WEB-INF/jsp_pages/core_page.jsp";
     String COMMON_HOME = "common_home.jsp";
     String LOGIN_MAIN_BLOCK = "login_main_block.jsp";
     String CUSTOMER_MASTER_PAGE = "customer_master_page.jsp";

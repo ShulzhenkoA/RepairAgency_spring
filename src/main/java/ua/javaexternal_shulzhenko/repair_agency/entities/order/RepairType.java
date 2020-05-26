@@ -1,4 +1,4 @@
-package ua.javaexternal_shulzhenko.repair_agency.constants;
+package ua.javaexternal_shulzhenko.repair_agency.entities.order;
 
 public enum RepairType {
     ENGINE_REPAIR,

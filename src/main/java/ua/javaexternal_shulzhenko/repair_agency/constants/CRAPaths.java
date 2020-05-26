@@ -1,6 +1,7 @@
 package ua.javaexternal_shulzhenko.repair_agency.constants;
 
 public final class CRAPaths {
+    public static final String START = "/";
     public static final String HOME = "/home";
     public static final String REVIEWS = "/reviews";
     public static final String CUSTOMER_HOME = "/customer_home";
@@ -23,6 +24,5 @@ public final class CRAPaths {
     public static final String CUSTOMERS = "/customers";
     public static final String MASTERS = "/masters";
     public static final String LANGUAGE = "/language";
-    public static final String ERROR404 = "/error404";
-    public static final String ERROR500 = "/error500";
+    public static final String ERROR = "/error";
 }

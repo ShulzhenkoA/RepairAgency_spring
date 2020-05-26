@@ -1,9 +1,9 @@
 <%@ tag pageEncoding="UTF-8" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.PaginationConstants" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.user.Role" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.OrderStatus" %>
+<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus" %>
 <%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.RepairType" %>
+<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType" %>
 <%@ attribute name="loop_num" required="true"
               type="java.lang.String" %>
 <%@ attribute name="order_object" required="true"
@@ -12,12 +12,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/cust_tags.tld" prefix="cust" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="cust_form" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 
 <fmt:setLocale value="${pageContext.response.locale}"/>
 <fmt:setBundle basename="cra_language"/>
 
 <c:if test="${order_object ne null}">
+
     <div class="${(user.role eq Role.MANAGER and (requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MANAGER_HOME or
                     requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.ACTIVE_ORDERS)) or
                         (user.role eq Role.MASTER and requestScope['javax.servlet.forward.servlet_path']
@@ -27,7 +29,7 @@
             <span>
                  <cust:entity-page-counter loop_count_num="${loop_num}"
                                            page_num="${param.page}"
-                                           entities_page_amount="${PaginationConstants.ORDERS_FOR_PAGE.amount}"/>
+                                           entities_page_amount="${PaginationConstants.ORDERS_FOR_PAGE}"/>
             </span>
 
             </div>
@@ -49,13 +51,13 @@
                 <div class="row">
                     <div class="col-md-3"><h6><fmt:message key="cra.order.date_ord"/></h6></div>
                     <div class="col-md-7"><p>
-                            <cust:date-formatter localDateTime="${order_object.date}" pattern="yyyy-MM-dd HH:mm"/></p></div>
+                        <cust:date-formatter localDateTime="${order_object.date}" pattern="yyyy-MM-dd HH:mm"/></p></div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-3"><h6><fmt:message key="cra.order.car_info"/></h6></div>
                     <div class="col-md-7">
-                        <p>${order_object.carBrand}, ${order_object.carModel}, ${order_object.carYearManufacture}</p>
+                        <p>${order_object.car.carBrand}, ${order_object.car.carModel}, ${order_object.car.carYear}</p>
                     </div>
                 </div>
                 <hr>
@@ -98,16 +100,20 @@
                         <div class="col-md-3">
                             <h6><c:choose>
                                 <c:when test="${order_object.status eq OrderStatus.REPAIR_COMPLETED or
-                                                order_object.status eq OrderStatus.ORDER_COMPLETED}">
+                                                    order_object.status eq OrderStatus.ORDER_COMPLETED}">
                                     <fmt:message key="cra.order.ord_price"/>
                                 </c:when>
-                                <c:otherwise><fmt:message key="cra.order.prev_price"/></c:otherwise>
-                            </c:choose></h6></div>
+                                <c:otherwise>
+                                    <fmt:message key="cra.order.prev_price"/>
+                                </c:otherwise>
+                            </c:choose>
+                            </h6>
+                        </div>
                         <div class="col-md-7"><p>${order_object.price} $</p></div>
                     </div>
                     <hr>
                 </c:if>
-                <c:if test="${order_object.master.id ne 0}">
+                <c:if test="${order_object.master ne null}">
                     <div class="row">
                         <div class="col-md-3"><h6><fmt:message key="cra.order.mas_info"/></h6></div>
                         <div class="col-md-7"><p>${order_object.master.firstName} ${order_object.master.lastName}</p>
@@ -119,7 +125,8 @@
                     <div class="row">
                         <div class="col-md-3"><h6><fmt:message key="cra.order.rep_com_date"/></h6></div>
                         <div class="col-md-7"><p>
-                            <cust:date-formatter localDateTime="${order_object.repairCompletionDate}" pattern="yyyy-MM-dd HH:mm"/></p></div>
+                            <cust:date-formatter localDateTime="${order_object.repairCompletionDate}"
+                                                 pattern="yyyy-MM-dd HH:mm"/></p></div>
                     </div>
                     <hr>
                 </c:if>
@@ -156,7 +163,8 @@
                     </div>
                 </c:if>
             </div>
-            <c:if test="${(user.role eq Role.MANAGER and (requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MANAGER_HOME or
+            <c:if test="${(user.role eq Role.MANAGER and
+                (requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MANAGER_HOME or
                             requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.ACTIVE_ORDERS))}">
                 <div class="col-md-2" style="text-align: center">
                     <button type="button" class="btn" data-toggle="modal" data-target="#editModal${order_object.id}">
@@ -168,10 +176,12 @@
                 </div>
             </c:if>
             <c:if test="${user.role eq Role.MASTER and
-            requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MASTER_HOME and
-            order_object.status ne OrderStatus.REPAIR_WORK and order_object.status ne OrderStatus.REPAIR_COMPLETED}">
+                requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MASTER_HOME and
+                    order_object.status ne OrderStatus.REPAIR_WORK and
+                        order_object.status ne OrderStatus.REPAIR_COMPLETED}">
                 <div class="col-md-2" style="text-align: center">
-                    <button type="button" class="btn" data-toggle="modal" data-target="#rep_workStatus${order_object.id}">
+                    <button type="button" class="btn" data-toggle="modal"
+                            data-target="#rep_workStatus${order_object.id}">
                         <fmt:message key="cra.order.rep_work"/>
                     </button>
                     <div class="modal fade" id="rep_workStatus${order_object.id}">
@@ -187,14 +197,17 @@
                                     <fmt:message key="cra.order.sure_rep_work"/>
                                 </div>
                                 <div class="modal-footer">
-                                    <form action="${pageContext.request.contextPath}${CRAPaths.EDIT_STATUS}" method="post">
+                                    <form action="${pageContext.request.contextPath}${CRAPaths.EDIT_STATUS}"
+                                          method="post">
                                         <div class="col-sm-6 offset-sm-3 submit-button">
                                             <input type="hidden" name="status" value="${OrderStatus.REPAIR_WORK}">
                                             <input type="hidden" name="orderID" value="${order_object.id}">
-                                            <button type="submit" class="btn"><fmt:message key="cra.order.yes"/></button>
+                                            <button type="submit" class="btn"><fmt:message
+                                                    key="cra.order.yes"/></button>
                                         </div>
                                     </form>
-                                    <button type="button" class="btn cancel-btn" data-dismiss="modal"><fmt:message key="cra.order.cancel"/></button>
+                                    <button type="button" class="btn cancel-btn" data-dismiss="modal"><fmt:message
+                                            key="cra.order.cancel"/></button>
                                 </div>
                             </div>
                         </div>
@@ -202,10 +215,11 @@
                 </div>
             </c:if>
             <c:if test="${user.role eq Role.MASTER and
-            requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MASTER_HOME and
-            order_object.status eq OrderStatus.REPAIR_WORK}">
+                requestScope['javax.servlet.forward.servlet_path'] eq CRAPaths.MASTER_HOME and
+                    order_object.status eq OrderStatus.REPAIR_WORK}">
                 <div class="col-md-2" style="text-align: center">
-                    <button type="button" class="btn" data-toggle="modal" data-target="#rep_compStatus${order_object.id}">
+                    <button type="button" class="btn" data-toggle="modal"
+                            data-target="#rep_compStatus${order_object.id}">
                         <fmt:message key="cra.order.completed"/>
                     </button>
                     <div class="modal fade" id="rep_compStatus${order_object.id}">
@@ -221,14 +235,17 @@
                                     <fmt:message key="cra.order.sure_comp_st"/>
                                 </div>
                                 <div class="modal-footer">
-                                    <form action="${pageContext.request.contextPath}${CRAPaths.EDIT_STATUS}" method="post">
+                                    <form action="${pageContext.request.contextPath}${CRAPaths.EDIT_STATUS}"
+                                          method="post">
                                         <div class="col-sm-6 offset-sm-3 submit-button">
                                             <input type="hidden" name="status" value="${OrderStatus.REPAIR_COMPLETED}">
                                             <input type="hidden" name="orderID" value="${order_object.id}">
-                                            <button type="submit" class="btn"><fmt:message key="cra.order.yes"/></button>
+                                            <button type="submit" class="btn"><fmt:message
+                                                    key="cra.order.yes"/></button>
                                         </div>
                                     </form>
-                                    <button type="button" class="btn cancel-btn" data-dismiss="modal"><fmt:message key="cra.order.cancel"/></button>
+                                    <button type="button" class="btn cancel-btn" data-dismiss="modal"><fmt:message
+                                            key="cra.order.cancel"/></button>
                                 </div>
                             </div>
                         </div>

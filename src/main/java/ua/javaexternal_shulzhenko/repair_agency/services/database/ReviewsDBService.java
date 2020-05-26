@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.entities.review.Review;
-import ua.javaexternal_shulzhenko.repair_agency.repository.ReviewsRepository;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.repository.ReviewsRepository;
 
 @Service
 public final class ReviewsDBService {

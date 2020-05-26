@@ -8,6 +8,7 @@
 <fmt:setBundle basename="cra_language"/>
 
 <div class="list-group sticky-top">
+
     <security:authorize access="hasAuthority('CUSTOMER')">
         <a href="${pageContext.request.contextPath}${CRAPaths.CUSTOMER_HOME}"
            class="list-group-item list-group-item-action">
@@ -16,6 +17,7 @@
            class="list-group-item list-group-item-action">
             <fmt:message key="cra.aside_personal_menu.customer.order_history"/></a>
     </security:authorize>
+
     <security:authorize access="hasAuthority('MASTER')">
         <a href="${pageContext.request.contextPath}${CRAPaths.MASTER_HOME}"
            class="list-group-item list-group-item-action">
@@ -24,6 +26,7 @@
            class="list-group-item list-group-item-action">
             <fmt:message key="cra.aside_personal_menu.master.completed_order"/></a>
     </security:authorize>
+
     <security:authorize access="hasAuthority('MANAGER')">
         <a href="${pageContext.request.contextPath}${CRAPaths.MANAGER_HOME}"
            class="list-group-item list-group-item-action">
@@ -41,6 +44,7 @@
            class="list-group-item list-group-item-action">
             <fmt:message key="cra.aside_personal_menu.manager.cra_masters"/></a>
     </security:authorize>
+
     <security:authorize access="hasAuthority('ADMIN')">
         <a href="${pageContext.request.contextPath}${CRAPaths.ADMIN_HOME}"
            class="list-group-item list-group-item-action">
@@ -49,6 +53,7 @@
            class="list-group-item list-group-item-action">
             <fmt:message key="cra.aside_personal_menu.admin.reg_man/mas"/></a>
     </security:authorize>
+
     <security:authorize access="isAnonymous() or hasAuthority('CUSTOMER')">
         <a href="${pageContext.request.contextPath}${CRAPaths.CREATE_ORDER}"
            class="list-group-item list-group-item-action">
@@ -64,5 +69,4 @@
                 '#contacts' : pageContext.request.contextPath.concat(CRAPaths.HOME.concat('#contacts'))}"
                         class="list-group-item list-group-item-action">
                             <fmt:message key="cra.aside_menu.contacts"/></a>
-
 </div>

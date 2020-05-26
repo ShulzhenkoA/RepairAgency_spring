@@ -6,10 +6,10 @@ import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "reviews")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
