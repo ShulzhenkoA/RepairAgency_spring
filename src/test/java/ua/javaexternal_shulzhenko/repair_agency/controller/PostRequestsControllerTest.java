@@ -1,16 +1,18 @@
-package ua.javaexternal_shulzhenko.repair_agency;
+package ua.javaexternal_shulzhenko.repair_agency.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 @TestPropertySource("/application-test.properties")
-class RepairAgencySpringApplicationTests {
-	@Test
-	void contextLoads() {
-	}
+@WebMvcTest
+class PostRequestsControllerTest {
+
+
+    public void test(){
+
+    }
 }

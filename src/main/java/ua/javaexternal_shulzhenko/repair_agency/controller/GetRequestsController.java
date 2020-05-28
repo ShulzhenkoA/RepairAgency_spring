@@ -8,16 +8,15 @@ import ua.javaexternal_shulzhenko.repair_agency.constants.*;
 import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl.ContentProvideCommands;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class GetRequestsController {
 
-    @GetMapping({CRAPaths.START, CRAPaths.HOME, CRAPaths.REGISTRATION, CRAPaths.LOGIN, CRAPaths.CREATE_ORDER,
-            CRAPaths.ADMIN_HOME, CRAPaths.MAN_MAS_REGISTRATION, CRAPaths.EDIT_USER, CRAPaths.DELETE_USER,
-            CRAPaths.EDIT_STATUS, CRAPaths.EDIT_ORDER})
+    @GetMapping({CRAPaths.START, CRAPaths.HOME, CRAPaths.LOGIN, CRAPaths.REGISTRATION, CRAPaths.CREATE_ORDER,
+            CRAPaths.ADMIN_HOME, CRAPaths.MAN_MAS_REGISTRATION, CRAPaths.EDIT_USER, CRAPaths.EDIT_ORDER})
     public String handleSimpleRequest(HttpServletRequest req, Model model) {
-
         String requestRecourse = req.getServletPath();
         return ContentProvideCommands.COMMANDS.get(requestRecourse).handleRequest(model);
     }

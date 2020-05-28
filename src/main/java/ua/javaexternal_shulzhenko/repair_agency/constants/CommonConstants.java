@@ -6,8 +6,6 @@ public interface CommonConstants {
     String EN = "en";
     String ELLIPSIS = "ellipsis";
     String CURRENT = "current";
-    String MASTER = "master";
-    String PRICE = "price";
     String PAGE_EQUAL = "?page=";
     String BAD_CREDENTIALS = "Bad credentials";
     String REFERER = "referer";

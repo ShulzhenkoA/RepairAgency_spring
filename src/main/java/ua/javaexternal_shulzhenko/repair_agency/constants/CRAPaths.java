@@ -4,6 +4,7 @@ public final class CRAPaths {
     public static final String START = "/";
     public static final String HOME = "/home";
     public static final String REVIEWS = "/reviews";
+    public static final String LANGUAGE = "/language";
     public static final String CUSTOMER_HOME = "/customer_home";
     public static final String CUSTOMER_ORDER_HISTORY = "/customer_order_history";
     public static final String REGISTRATION = "/registration";
@@ -23,6 +24,5 @@ public final class CRAPaths {
     public static final String ORDER_HISTORY = "/order_history";
     public static final String CUSTOMERS = "/customers";
     public static final String MASTERS = "/masters";
-    public static final String LANGUAGE = "/language";
     public static final String ERROR = "/error";
 }

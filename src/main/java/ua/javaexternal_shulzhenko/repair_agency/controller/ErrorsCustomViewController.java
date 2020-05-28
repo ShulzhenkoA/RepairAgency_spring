@@ -20,12 +20,11 @@ public class ErrorsCustomViewController implements ErrorController {
     public String handelError(HttpServletRequest req){
 
         Object stCode = req.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
         if (stCode != null){
 
             int code = Integer.parseInt(stCode.toString());
 
-            if(code == HttpStatus.NOT_FOUND.value() || code == HttpStatus.FORBIDDEN.value()){
+            if(code <= HttpStatus.INTERNAL_SERVER_ERROR.value()){
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE404);
             } else {
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE500);

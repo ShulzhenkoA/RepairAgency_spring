@@ -57,6 +57,7 @@ public class CraWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .hasAuthority(Role.MANAGER.name())
                 .antMatchers(CRAPaths.LOGIN, CRAPaths.REGISTRATION)
                         .anonymous()
+                .antMatchers(CRAPaths.ERROR).denyAll()
         .and()
                 .csrf().disable()
                 .formLogin()
@@ -78,5 +79,4 @@ public class CraWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(usersDBService).passwordEncoder(gerBCryptPasswordEncoder());
     }
-
 }

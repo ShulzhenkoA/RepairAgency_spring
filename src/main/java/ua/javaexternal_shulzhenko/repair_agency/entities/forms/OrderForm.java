@@ -1,7 +1,6 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType;
@@ -13,6 +12,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderForm {
 
     @Pattern(regexp = "^[\\p{L}](?=.*[\\d\\p{L}])[- .\\d\\p{L}]{1,31}")

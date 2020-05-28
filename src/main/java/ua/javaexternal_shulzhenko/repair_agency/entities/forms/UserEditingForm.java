@@ -1,7 +1,6 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +8,9 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEditingForm {
 
     @NotNull

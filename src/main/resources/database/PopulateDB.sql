@@ -1,104 +1,92 @@
-INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Admin', 'Admin', 'admin@mail.com', '$2y$10$XE9GLIsRTUZOS.aESLN7QerNyKhJ4cRzjd8Qo8dQKe2KF9HaF70Dq', 'ADMIN');
-INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Customer first name', 'Customer last name', 'customer@mail.com', '$2y$10$d.H9YgTVqz4sjYQ6DFcjTe8tOUjg82FOnq6XFmX1BA5EXKLoyGfU.', 'CUSTOMER');
-INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Ім`я клієнта', 'Прізвище клієнта', 'custome_secondr@mail.com', '$2y$10$d.H9YgTVqz4sjYQ6DFcjTe8tOUjg82FOnq6XFmX1BA5EXKLoyGfU.', 'CUSTOMER');
-INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Master', 'master@mail.com', '$2y$10$shOhAj3XBaRbUl/ozpiQrun6y.hmTT5TqR9bzcA5oi6vCTdAs/qqy', 'MASTER');
-INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Manager', 'manager@mail.com', '$2y$10$LQaofA1Lz9b.lOR5HzrCAuk9wDYy5gvdjeng5rQfp8rsVYFIyvvI2', 'MANAGER');
+INSERT INTO spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Admin', 'Admin', 'admin@mail.com', '$2y$10$XE9GLIsRTUZOS.aESLN7QerNyKhJ4cRzjd8Qo8dQKe2KF9HaF70Dq', 'ADMIN'),
+                                                                                             ('Customer first name', 'Customer last name', 'customer@mail.com', '$2y$10$d.H9YgTVqz4sjYQ6DFcjTe8tOUjg82FOnq6XFmX1BA5EXKLoyGfU.', 'CUSTOMER'),
+                                                                                             ('Ім`я клієнта', 'Прізвище клієнта', 'custome_secondr@mail.com', '$2y$10$d.H9YgTVqz4sjYQ6DFcjTe8tOUjg82FOnq6XFmX1BA5EXKLoyGfU.', 'CUSTOMER'),
+                                                                                             ('Testing', 'Master', 'master@mail.com', '$2y$10$shOhAj3XBaRbUl/ozpiQrun6y.hmTT5TqR9bzcA5oi6vCTdAs/qqy', 'MASTER'),
+                                                                                             ('Testing', 'Manager', 'manager@mail.com', '$2y$10$LQaofA1Lz9b.lOR5HzrCAuk9wDYy5gvdjeng5rQfp8rsVYFIyvvI2', 'MANAGER');
 
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 09:16:31', 'Nice review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 10:16:31', 'Поганий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 11:16:31', 'More better review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 12:16:31', 'Гірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 13:16:31', 'The best review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 14:16:31', 'Найгірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 15:16:31', 'Bad review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 16:16:31', 'Гарний відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 17:16:31', 'Worse review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 18:16:31', 'Кращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 19:16:31', 'The worst review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 20:16:31', 'Найкращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 21:16:31', 'Simple review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-13 22:16:31', 'Просто відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 23:16:31', 'Review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 00:16:31', 'Відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 01:16:31', 'King of the reviews');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 02:16:31', 'Король відгуків');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 03:16:31', 'True review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 04:16:31', 'Правдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 05:16:31', 'False review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 06:16:31', 'Неправдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 07:16:31', 'Not review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 08:16:31', 'Таке собі... ');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 09:16:31', 'Nice review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 10:16:31', 'Поганий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 11:16:31', 'More better review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 12:16:31', 'Гірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 13:16:31', 'The best review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 14:16:31', 'Найгірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 15:16:31', 'Bad review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 16:16:31', 'Гарний відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 17:16:31', 'Worse review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 18:16:31', 'Кращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 19:16:31', 'The worst review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 20:16:31', 'Найкращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 21:16:31', 'Simple review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-14 22:16:31', 'Просто відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-14 23:16:31', 'Review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 00:16:31', 'Відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 01:16:31', 'King of the reviews');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 02:16:31', 'Король відгуків');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 03:16:31', 'True review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 04:16:31', 'Правдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 05:16:31', 'False review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 06:16:31', 'Неправдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 07:16:31', 'Not review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 08:16:31', 'Таке собі... ');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 09:16:31', 'Nice review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 10:16:31', 'Поганий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 11:16:31', 'More better review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 12:16:31', 'Гірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 13:16:31', 'The best review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 14:16:31', 'Найгірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 15:16:31', 'Bad review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 16:16:31', 'Гарний відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 17:16:31', 'Worse review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 18:16:31', 'Кращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 19:16:31', 'The worst review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 20:16:31', 'Найкращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 21:16:31', 'Simple review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-15 22:16:31', 'Просто відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-15 23:16:31', 'Review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 00:16:31', 'Відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 01:16:31', 'King of the reviews');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 02:16:31', 'Король відгуків');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 03:16:31', 'True review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 04:16:31', 'Правдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 05:16:31', 'False review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 06:16:31', 'Неправдивий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 07:16:31', 'Not review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 08:16:31', 'Таке собі... ');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 09:16:31', 'Nice review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 10:16:31', 'Поганий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 11:16:31', 'More better review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 12:16:31', 'Гірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 13:16:31', 'The best review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 14:16:31', 'Найгірший відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 15:16:31', 'Bad review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 16:16:31', 'Гарний відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 17:16:31', 'Worse review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 18:16:31', 'Кращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 19:16:31', 'The worst review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 20:16:31', 'Найкращий відгук');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 21:16:31', 'Simple review');
-INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (3, '2020-01-16 22:16:31', 'Просто відгук');
-
-
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Admin', 'testing_admin@mail.com', -904517469, 'ADMIN');
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Customer', 'testing_customer@mail.com', 1076259745, 'CUSTOMER');
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Master', 'testing_master@mail.com', 451058973, 'MASTER');
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Testing', 'Manager', 'testing_manager@mail.com', 937282774, 'MANAGER');
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('User for editing', 'Master for editing', 'for_editing_master@mail.com', 451058973, 'MASTER');
-INSERT INTO test_spring_repair_agency.users (first_name, last_name, email, password, role) VALUES ('Transaction testing master', 'Transaction testing master', 'transaction_master@mail.com', 451058973, 'MASTER');
-
-INSERT INTO test_spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-12 09:16:31', 'Testing review');
-INSERT INTO test_spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-16 09:16:31', 'Other testing review');
-INSERT INTO test_spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-17 09:16:31', 'Simple testing review');
+INSERT INTO spring_repair_agency.reviews(customer_id, review_date, review_content) VALUES (2, '2020-01-13 09:16:31', 'Nice review'),
+                                                                                          (3, '2020-01-13 10:16:31', 'Поганий відгук'),
+                                                                                          (2, '2020-01-13 11:16:31', 'More better review'),
+                                                                                          (3, '2020-01-13 12:16:31', 'Гірший відгук'),
+                                                                                          (2, '2020-01-13 13:16:31', 'The best review'),
+                                                                                          (3, '2020-01-13 14:16:31', 'Найгірший відгук'),
+                                                                                          (2, '2020-01-13 15:16:31', 'Bad review'),
+                                                                                          (3, '2020-01-13 16:16:31', 'Гарний відгук'),
+                                                                                          (2, '2020-01-13 17:16:31', 'Worse review'),
+                                                                                          (3, '2020-01-13 18:16:31', 'Кращий відгук'),
+                                                                                          (2, '2020-01-13 19:16:31', 'The worst review'),
+                                                                                          (3, '2020-01-13 20:16:31', 'Найкращий відгук'),
+                                                                                          (2, '2020-01-13 21:16:31', 'Simple review'),
+                                                                                          (3, '2020-01-13 22:16:31', 'Просто відгук'),
+                                                                                          (2, '2020-01-13 23:16:31', 'Review'),
+                                                                                          (3, '2020-01-14 00:16:31', 'Відгук'),
+                                                                                          (2, '2020-01-14 01:16:31', 'King of the reviews'),
+                                                                                          (3, '2020-01-14 02:16:31', 'Король відгуків'),
+                                                                                          (2, '2020-01-14 03:16:31', 'True review'),
+                                                                                          (3, '2020-01-14 04:16:31', 'Правдивий відгук'),
+                                                                                          (2, '2020-01-14 05:16:31', 'False review'),
+                                                                                          (3, '2020-01-14 06:16:31', 'Неправдивий відгук'),
+                                                                                          (2, '2020-01-14 07:16:31', 'Not review'),
+                                                                                          (3, '2020-01-14 08:16:31', 'Таке собі... '),
+                                                                                          (2, '2020-01-14 09:16:31', 'Nice review'),
+                                                                                          (3, '2020-01-14 10:16:31', 'Поганий відгук'),
+                                                                                          (2, '2020-01-14 11:16:31', 'More better review'),
+                                                                                          (3, '2020-01-14 12:16:31', 'Гірший відгук'),
+                                                                                          (2, '2020-01-14 13:16:31', 'The best review'),
+                                                                                          (3, '2020-01-14 14:16:31', 'Найгірший відгук'),
+                                                                                          (2, '2020-01-14 15:16:31', 'Bad review'),
+                                                                                          (3, '2020-01-14 16:16:31', 'Гарний відгук'),
+                                                                                          (2, '2020-01-14 17:16:31', 'Worse review'),
+                                                                                          (3, '2020-01-14 18:16:31', 'Кращий відгук'),
+                                                                                          (2, '2020-01-14 19:16:31', 'The worst review'),
+                                                                                          (3, '2020-01-14 20:16:31', 'Найкращий відгук'),
+                                                                                          (2, '2020-01-14 21:16:31', 'Simple review'),
+                                                                                          (3, '2020-01-14 22:16:31', 'Просто відгук'),
+                                                                                          (2, '2020-01-14 23:16:31', 'Review'),
+                                                                                          (3, '2020-01-15 00:16:31', 'Відгук'),
+                                                                                          (2, '2020-01-15 01:16:31', 'King of the reviews'),
+                                                                                          (3, '2020-01-15 02:16:31', 'Король відгуків'),
+                                                                                          (2, '2020-01-15 03:16:31', 'True review'),
+                                                                                          (3, '2020-01-15 04:16:31', 'Правдивий відгук'),
+                                                                                          (2, '2020-01-15 05:16:31', 'False review'),
+                                                                                          (3, '2020-01-15 06:16:31', 'Неправдивий відгук'),
+                                                                                          (2, '2020-01-15 07:16:31', 'Not review'),
+                                                                                          (3, '2020-01-15 08:16:31', 'Таке собі... '),
+                                                                                          (2, '2020-01-15 09:16:31', 'Nice review'),
+                                                                                          (3, '2020-01-15 10:16:31', 'Поганий відгук'),
+                                                                                          (2, '2020-01-15 11:16:31', 'More better review'),
+                                                                                          (3, '2020-01-15 12:16:31', 'Гірший відгук'),
+                                                                                          (2, '2020-01-15 13:16:31', 'The best review'),
+                                                                                          (3, '2020-01-15 14:16:31', 'Найгірший відгук'),
+                                                                                          (2, '2020-01-15 15:16:31', 'Bad review'),
+                                                                                          (3, '2020-01-15 16:16:31', 'Гарний відгук'),
+                                                                                          (2, '2020-01-15 17:16:31', 'Worse review'),
+                                                                                          (3, '2020-01-15 18:16:31', 'Кращий відгук'),
+                                                                                          (2, '2020-01-15 19:16:31', 'The worst review'),
+                                                                                          (3, '2020-01-15 20:16:31', 'Найкращий відгук'),
+                                                                                          (2, '2020-01-15 21:16:31', 'Simple review'),
+                                                                                          (3, '2020-01-15 22:16:31', 'Просто відгук'),
+                                                                                          (2, '2020-01-15 23:16:31', 'Review'),
+                                                                                          (3, '2020-01-16 00:16:31', 'Відгук'),
+                                                                                          (2, '2020-01-16 01:16:31', 'King of the reviews'),
+                                                                                          (3, '2020-01-16 02:16:31', 'Король відгуків'),
+                                                                                          (2, '2020-01-16 03:16:31', 'True review'),
+                                                                                          (3, '2020-01-16 04:16:31', 'Правдивий відгук'),
+                                                                                          (2, '2020-01-16 05:16:31', 'False review'),
+                                                                                          (3, '2020-01-16 06:16:31', 'Неправдивий відгук'),
+                                                                                          (2, '2020-01-16 07:16:31', 'Not review'),
+                                                                                          (3, '2020-01-16 08:16:31', 'Таке собі... '),
+                                                                                          (2, '2020-01-16 09:16:31', 'Nice review'),
+                                                                                          (3, '2020-01-16 10:16:31', 'Поганий відгук'),
+                                                                                          (2, '2020-01-16 11:16:31', 'More better review'),
+                                                                                          (3, '2020-01-16 12:16:31', 'Гірший відгук'),
+                                                                                          (2, '2020-01-16 13:16:31', 'The best review'),
+                                                                                          (3, '2020-01-16 14:16:31', 'Найгірший відгук'),
+                                                                                          (2, '2020-01-16 15:16:31', 'Bad review'),
+                                                                                          (3, '2020-01-16 16:16:31', 'Гарний відгук'),
+                                                                                          (2, '2020-01-16 17:16:31', 'Worse review'),
+                                                                                          (3, '2020-01-16 18:16:31', 'Кращий відгук'),
+                                                                                          (2, '2020-01-16 19:16:31', 'The worst review'),
+                                                                                          (3, '2020-01-16 20:16:31', 'Найкращий відгук'),
+                                                                                          (2, '2020-01-16 21:16:31', 'Simple review'),
+                                                                                          (3, '2020-01-16 22:16:31', 'Просто відгук');

@@ -69,9 +69,9 @@ public class ContentProvideCommands {
                     PageRequest.of(
                             pageNum - 1, PaginationConstants.REVIEWS_FOR_HOME,
                             Sort.by(Sort.Order.desc(CommonConstants.ID))));
-            model.
-                    addAttribute(Attributes.REVIEWS, pageReviews.getContent()).
-                    addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.COMMON_HOME);
+            model
+                    .addAttribute(Attributes.REVIEWS, pageReviews.getContent())
+                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.COMMON_HOME);
             return CRA_JSPFiles.CORE_PAGE;
         });
 
@@ -134,7 +134,7 @@ public class ContentProvideCommands {
                     .addAttribute(Attributes.ORDERS, orders.getContent())
                     .addAttribute(Attributes.MASTERS, masters)
                     .addAttribute(Attributes.PG_MODEL, paginationModel)
-                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_HOME);
+                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE);
             return CRA_JSPFiles.CORE_PAGE;
         });
 
@@ -155,7 +155,7 @@ public class ContentProvideCommands {
                     .addAttribute(Attributes.ORDERS, orders.getContent())
                     .addAttribute(Attributes.MASTERS, masters)
                     .addAttribute(Attributes.PG_MODEL, paginationModel)
-                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_HOME);
+                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE);
             return CRA_JSPFiles.CORE_PAGE;
         });
 
@@ -174,7 +174,7 @@ public class ContentProvideCommands {
             model
                     .addAttribute(Attributes.ORDERS, orders.getContent())
                     .addAttribute(Attributes.PG_MODEL, paginationModel)
-                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_HOME);
+                    .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE);
             return CRA_JSPFiles.CORE_PAGE;
         });
 
@@ -192,7 +192,7 @@ public class ContentProvideCommands {
             model.
                     addAttribute(Attributes.CUSTOMERS, customers.getContent()).
                     addAttribute(Attributes.PG_MODEL, paginationModel).
-                    addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_HOME);
+                    addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE);
             return CRA_JSPFiles.CORE_PAGE;
         });
 
@@ -209,7 +209,7 @@ public class ContentProvideCommands {
             model.
                     addAttribute(Attributes.MASTERS, masters.getContent()).
                     addAttribute(Attributes.PG_MODEL, paginationModel).
-                    addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_HOME);
+                    addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE);
             return CRA_JSPFiles.CORE_PAGE;
         });
 

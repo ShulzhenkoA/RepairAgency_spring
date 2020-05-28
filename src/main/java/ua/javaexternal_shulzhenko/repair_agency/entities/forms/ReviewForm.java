@@ -1,6 +1,8 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.javaexternal_shulzhenko.repair_agency.entities.review.Review;
 
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReviewForm {
 
     @NotBlank

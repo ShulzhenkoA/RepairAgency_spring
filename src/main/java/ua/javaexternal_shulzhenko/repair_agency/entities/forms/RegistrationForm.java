@@ -1,7 +1,6 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
@@ -13,6 +12,9 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegistrationForm {
 
     @Pattern(regexp = "^[\\p{L}](?=.*[\\p{L}])[- '\\p{L}]{1,63}")
