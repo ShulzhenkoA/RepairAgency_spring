@@ -5,11 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import ua.javaexternal_shulzhenko.repair_agency.constants.*;
-import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl.ContentProvideCommands;
+import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.RequestHandler;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+
+import static ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl.ContentProvideCommands.*;
 
 @Controller
 public class GetRequestsController {
@@ -18,7 +19,9 @@ public class GetRequestsController {
             CRAPaths.ADMIN_HOME, CRAPaths.MAN_MAS_REGISTRATION, CRAPaths.EDIT_USER, CRAPaths.EDIT_ORDER})
     public String handleSimpleRequest(HttpServletRequest req, Model model) {
         String requestRecourse = req.getServletPath();
-        return ContentProvideCommands.COMMANDS.get(requestRecourse).handleRequest(model);
+
+        RequestHandler handler = COMMANDS.get(requestRecourse);
+        return handler.handleRequest(model);
     }
 
     @GetMapping({CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
@@ -31,7 +34,8 @@ public class GetRequestsController {
                 .addAttribute(Attributes.PAGE_NUM, page)
                 .addAttribute(Attributes.URI, uri);
 
-        return ContentProvideCommands.COMMANDS.get(requestRecourse).handleRequest(model);
+        RequestHandler handler = COMMANDS.get(requestRecourse);
+        return handler.handleRequest(model);
     }
 
     @GetMapping({CRAPaths.CUSTOMER_HOME, CRAPaths.CUSTOMER_ORDER_HISTORY,
@@ -42,11 +46,14 @@ public class GetRequestsController {
 
         String requestRecourse = req.getServletPath();
         String uri = req.getRequestURI();
+        System.out.println(user.getId());
         model
                 .addAttribute(Attributes.PAGE_NUM, page)
                 .addAttribute(Attributes.URI, uri)
                 .addAttribute(Attributes.USER_ID, user.getId());
-        return ContentProvideCommands.COMMANDS.get(requestRecourse).handleRequest(model);
+
+        RequestHandler handler = COMMANDS.get(requestRecourse);
+        return handler.handleRequest(model);
     }
 
     @GetMapping(CRAPaths.LANGUAGE)
