@@ -1,5 +1,7 @@
 package ua.javaexternal_shulzhenko.repair_agency.services.editing.impl;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.UserEditingForm;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.Editor;
@@ -7,15 +9,15 @@ import ua.javaexternal_shulzhenko.repair_agency.services.editing.Editor;
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
+@Scope("prototype")
 public class UserEditor implements Editor {
 
-    private final UserEditingForm form;
-    private final User user;
+    private UserEditingForm form;
+    private User user;
     private final List<UserEdits> edits;
 
-    public UserEditor(UserEditingForm form, User user) {
-        this.form = form;
-        this.user = user;
+    public UserEditor() {
         edits = new LinkedList<>();
     }
 
@@ -44,6 +46,16 @@ public class UserEditor implements Editor {
         if(!form.getRole().equals(user.getRole())){
             edits.add(UserEdits.ROLE);
         }
+        return this;
+    }
+
+    public UserEditor setForm(UserEditingForm form) {
+        this.form = form;
+        return this;
+    }
+
+    public UserEditor setUser(User user) {
+        this.user = user;
         return this;
     }
 

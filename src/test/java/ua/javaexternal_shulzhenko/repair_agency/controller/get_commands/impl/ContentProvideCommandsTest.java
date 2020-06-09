@@ -1,171 +1,431 @@
 package ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.ArgumentMatchers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
-import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
-import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
-import ua.javaexternal_shulzhenko.repair_agency.constants.CRA_JSPFiles;
-import ua.javaexternal_shulzhenko.repair_agency.constants.CommonConstants;
-import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.RequestHandler;
+import ua.javaexternal_shulzhenko.repair_agency.constants.*;
+import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.RequestHandleCommand;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
+import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 import ua.javaexternal_shulzhenko.repair_agency.entities.review.Review;
+import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.OrderDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.ReviewDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.UserDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.pagination.Pagination;
+
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl.ContentProvideCommands.COMMANDS;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class ContentProvideCommandsTest {
+
+    @MockBean
+    private UserDatabaseService userDatabaseService;
+
+    @MockBean
+    private OrderDatabaseService orderDatabaseService;
+
+    @MockBean
+    private ReviewDatabaseService reviewDatabaseService;
+
+    @MockBean
+    private Pagination pagination;
 
     @MockBean
     private Model model;
 
-    @Test
-    public void startCommand_returnsRedirectHome(){
-        when(model.addAttribute(any(), any())).thenReturn(model);
+    @Autowired
+    private ContentProvideCommands contentProvideCommands;
 
-        RequestHandler handler = COMMANDS.get(CRAPaths.START);
-        String returnedResource = handler.handleRequest(model);
+    @ParameterizedTest
+    @CsvSource({
+            CRAPaths.LOGIN + ", " + CRA_JSPFiles.LOGIN_MAIN_BLOCK,
+            CRAPaths.REGISTRATION + ", " + CRA_JSPFiles.REGISTRATION_MAIN_BLOCK,
+            CRAPaths.CREATE_ORDER + ", " + CRA_JSPFiles.ORDER_FORM,
+            CRAPaths.MAN_MAS_REGISTRATION + ", " + CRA_JSPFiles.ADMIN_PAGE,
+            CRAPaths.EDIT_USER + ", " + CRA_JSPFiles.USER_EDITING_MAIN_BLOCK,
+            CRAPaths.EDIT_ORDER + ", " + CRA_JSPFiles.ORDER_EDITING_MAIN_BLOCK})
+    public void command_setsCorrespondingMainBlockAndReturnCorePage(String commandName, String fileName) {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(commandName);
+
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(model).addAttribute(Attributes.MAIN_BLOCK, fileName),
+                () -> assertEquals(returnedResource, CRA_JSPFiles.CORE_PAGE));
+    }
+
+    @Test
+    public void commandStart_returnRedirectHome() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.START);
+
+        String returnedResource = command.handleRequest(model);
 
         assertEquals(CommonConstants.REDIRECT + CRAPaths.HOME, returnedResource);
     }
 
-    @ParameterizedTest
-    @CsvSource({CRAPaths.HOME, CRAPaths.LOGIN, CRAPaths.REGISTRATION, CRAPaths.CREATE_ORDER,
-            CRAPaths.ADMIN_HOME, CRAPaths.MAN_MAS_REGISTRATION, CRAPaths.EDIT_USER,
-            CRAPaths.EDIT_ORDER, CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
-            CRAPaths.ORDER_HISTORY, CRAPaths.CUSTOMERS, CRAPaths.MASTERS, CRAPaths.CUSTOMER_HOME,
-            CRAPaths.CUSTOMER_ORDER_HISTORY, CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void command_ReturnsCorePage(String command){
+    @Test
+    public void commandHome_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.HOME);
+
+        Page<Review> reviews = Page.empty();
+
         when(model.addAttribute(any(), any())).thenReturn(model);
-        when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
+        when(reviewDatabaseService.getPageableReviews(PageRequest.of(0, PaginationConstants.REVIEWS_FOR_HOME,
+                Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(reviews);
 
-        RequestHandler handler = COMMANDS.get(command);
-        String returnedResource = handler.handleRequest(model);
 
-        assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource);
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(reviewDatabaseService, times(1))
+                        .getPageableReviews(PageRequest.of(0, PaginationConstants.REVIEWS_FOR_HOME,
+                                Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(model, times(1)).addAttribute(Attributes.REVIEWS, reviews.getContent()),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.COMMON_HOME),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @CsvSource({CRAPaths.HOME + ", " + CRA_JSPFiles.COMMON_HOME,
-            CRAPaths.LOGIN + ", " + CRA_JSPFiles.LOGIN_MAIN_BLOCK,
-            CRAPaths.REGISTRATION + ", " + CRA_JSPFiles.REGISTRATION_MAIN_BLOCK,
-            CRAPaths.CREATE_ORDER + ", " + CRA_JSPFiles.ORDER_FORM,
-            CRAPaths.ADMIN_HOME + ", " + CRA_JSPFiles.ADMIN_PAGE,
-            CRAPaths.MAN_MAS_REGISTRATION + ", " + CRA_JSPFiles.ADMIN_PAGE,
-            CRAPaths.EDIT_USER + ", " + CRA_JSPFiles.USER_EDITING_MAIN_BLOCK,
-            CRAPaths.EDIT_ORDER + ", " + CRA_JSPFiles.ORDER_EDITING_MAIN_BLOCK,
-            CRAPaths.REVIEWS + ", " + CRA_JSPFiles.REVIEWS,
-            CRAPaths.MANAGER_HOME + ", " + CRA_JSPFiles.MANAGER_PAGE,
-            CRAPaths.ACTIVE_ORDERS + ", " + CRA_JSPFiles.MANAGER_PAGE,
-            CRAPaths.ORDER_HISTORY + ", " + CRA_JSPFiles.MANAGER_PAGE,
-            CRAPaths.CUSTOMERS + ", " + CRA_JSPFiles.MANAGER_PAGE,
-            CRAPaths.MASTERS + ", " + CRA_JSPFiles.MANAGER_PAGE,
-            CRAPaths.CUSTOMER_HOME + ", " + CRA_JSPFiles.CUSTOMER_MASTER_PAGE,
-            CRAPaths.CUSTOMER_ORDER_HISTORY + ", " + CRA_JSPFiles.CUSTOMER_MASTER_PAGE,
-            CRAPaths.MASTER_HOME + ", " + CRA_JSPFiles.CUSTOMER_MASTER_PAGE,
-            CRAPaths.MASTER_COMPLETED_ORDERS+ ", " + CRA_JSPFiles.CUSTOMER_MASTER_PAGE})
-    public void command_setsCorrespondFileToMainBlock(String command, String fileName){
-        when(model.addAttribute(any(), any())).thenReturn(model);
+    @Test
+    public void commandCustomerHome_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.CUSTOMER_HOME);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
+        when(model.addAttribute(any(), any())).thenReturn(model);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByTwoExcludeStatusesForCustomer(
+                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                        Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(orders);
 
-        verify(model).addAttribute(Attributes.MAIN_BLOCK, fileName);
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByTwoExcludeStatusesForCustomer(
+                                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.CUSTOMER_MASTER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @CsvSource({CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
-            CRAPaths.ORDER_HISTORY, CRAPaths.CUSTOMERS, CRAPaths.MASTERS, CRAPaths.CUSTOMER_HOME,
-            CRAPaths.CUSTOMER_ORDER_HISTORY, CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void paginatedCommand_setsPaginationAttribute(String command){
-        when(model.addAttribute(any(), any())).thenReturn(model);
+    @Test
+    public void commandCustomerOrderHistory_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.CUSTOMER_ORDER_HISTORY);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
+        when(model.addAttribute(any(), any())).thenReturn(model);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByTwoStatusesForCustomer(
+                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                        Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(orders);
 
-        verify(model).addAttribute(Attributes.PG_MODEL, null);
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByTwoStatusesForCustomer(
+                                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.CUSTOMER_MASTER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
+    @Test
+    public void commandManagerHome_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.MANAGER_HOME);
 
-    @ParameterizedTest
-    @ValueSource(strings = {CRAPaths.HOME, CRAPaths.REVIEWS})
-    @Sql(value = {"/database/TestPopulateUsers.sql", "/database/TestPopulateReviews.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"/database/TestDeleteUsers.sql", "/database/TestDeleteReviews.sql"},
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    public void homeCommand_setsReviewsAttribute(String command){
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.addAttribute(any(), any())).thenReturn(model);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByStatuses(
+                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE, Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                OrderStatus.PENDING))
+                .thenReturn(orders);
 
-        verify(model, times(1)).addAttribute(eq(Attributes.REVIEWS), ArgumentMatchers.<Review>anyList());
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByStatuses(
+                                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                                OrderStatus.PENDING),
+                () -> verify(userDatabaseService, times(1)).getUsersByRole(Role.MASTER),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.MASTERS, Collections.EMPTY_LIST),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-            CRAPaths.CUSTOMER_HOME, CRAPaths.CUSTOMER_ORDER_HISTORY, CRAPaths.MANAGER_HOME,
-            CRAPaths.ACTIVE_ORDERS, CRAPaths.ORDER_HISTORY, CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void command_setsOrdersAttribute(String command){
+    @Test
+    public void commandActiveOrders_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.ACTIVE_ORDERS);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.addAttribute(any(), any())).thenReturn(model);
-        when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByStatuses(
+                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE, Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                OrderStatus.CAR_WAITING, OrderStatus.REPAIR_WORK, OrderStatus.REPAIR_COMPLETED))
+                .thenReturn(orders);
 
-        verify(model, times(1)).addAttribute(eq(Attributes.ORDERS), ArgumentMatchers.<Order>anyList());
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByStatuses(
+                                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                                OrderStatus.CAR_WAITING, OrderStatus.REPAIR_WORK, OrderStatus.REPAIR_COMPLETED),
+                () -> verify(userDatabaseService, times(1)).getUsersByRole(Role.MASTER),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.MASTERS, Collections.EMPTY_LIST),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS, CRAPaths.MASTERS, CRAPaths.ADMIN_HOME})
-    public void command_setsMastersAttribute(String command){
+    @Test
+    public void commandOrderHistory_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.ORDER_HISTORY);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.addAttribute(any(), any())).thenReturn(model);
-        when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByStatuses(
+                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE, Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                OrderStatus.ORDER_COMPLETED, OrderStatus.REJECTED))
+                .thenReturn(orders);
 
-        verify(model, times(1)).addAttribute(eq(Attributes.MASTERS), ArgumentMatchers.<User>anyList());
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByStatuses(
+                                PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID))),
+                                OrderStatus.ORDER_COMPLETED, OrderStatus.REJECTED),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {CRAPaths.CUSTOMERS})
-    public void command_setsCustomersAttribute(String command){
+    @Test
+    public void commandCustomers_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.CUSTOMERS);
+
+        Page<User> customers = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.addAttribute(any(), any())).thenReturn(model);
-        when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(userDatabaseService.getPageableUsersByRole(
+                Role.CUSTOMER, PageRequest.of(
+                        0, PaginationConstants.USERS_FOR_PAGE, Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(customers);
 
-        verify(model, times(1)).addAttribute(eq(Attributes.CUSTOMERS), ArgumentMatchers.<User>anyList());
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(userDatabaseService, times(1))
+                        .getPageableUsersByRole(
+                                Role.CUSTOMER, PageRequest.of(
+                                        0, PaginationConstants.USERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", customers),
+                () -> verify(model, times(1)).addAttribute(Attributes.CUSTOMERS, customers.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {CRAPaths.ADMIN_HOME})
-    public void command_setsManagersAttribute(String command){
+    @Test
+    public void commandMasters_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.MASTERS);
+
+        Page<User> masters = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.addAttribute(any(), any())).thenReturn(model);
+
+        when(userDatabaseService.getPageableUsersByRole(
+                Role.MASTER, PageRequest.of(
+                        0, PaginationConstants.USERS_FOR_PAGE, Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(masters);
+
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(userDatabaseService, times(1))
+                        .getPageableUsersByRole(
+                                Role.MASTER, PageRequest.of(
+                                        0, PaginationConstants.USERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", masters),
+                () -> verify(model, times(1)).addAttribute(Attributes.MASTERS, masters.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.MANAGER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
+    }
+
+    @Test
+    public void commandMasterHome_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.MASTER_HOME);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
         when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
+        when(model.addAttribute(any(), any())).thenReturn(model);
 
-        RequestHandler handler = COMMANDS.get(command);
-        handler.handleRequest(model);
+        when(orderDatabaseService.getPageableOrdersByTwoExcludeStatusesForMaster(
+                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                        Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(orders);
 
-        verify(model, times(1)).addAttribute(eq(Attributes.MANAGERS), ArgumentMatchers.<User>anyList());
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByTwoExcludeStatusesForMaster(
+                                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.CUSTOMER_MASTER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
+    }
+
+    @Test
+    public void commandMasterCompletedOrders_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.MASTER_COMPLETED_ORDERS);
+
+        Page<Order> orders = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
+        when(model.getAttribute(Attributes.USER_ID)).thenReturn(0);
+        when(model.addAttribute(any(), any())).thenReturn(model);
+
+        when(orderDatabaseService.getPageableOrdersByTwoStatusesForMaster(
+                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                        Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(orders);
+
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(orderDatabaseService, times(1))
+                        .getPageableOrdersByTwoStatusesForMaster(
+                                OrderStatus.REJECTED, OrderStatus.ORDER_COMPLETED,
+                                0, PageRequest.of(0, PaginationConstants.ORDERS_FOR_PAGE,
+                                        Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(pagination, times(1)).createPaginationModel("URI", orders),
+                () -> verify(model, times(1)).addAttribute(Attributes.ORDERS, orders.getContent()),
+                () -> verify(model, times(1)).addAttribute(Attributes.PG_MODEL, null),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.CUSTOMER_MASTER_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
+    }
+
+    @Test
+    public void commandAdminHome_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.ADMIN_HOME);
+
+        when(model.addAttribute(any(), any())).thenReturn(model);
+
+        when(userDatabaseService.getUsersByRole(Role.MASTER)).thenReturn(Collections.EMPTY_LIST);
+        when(userDatabaseService.getUsersByRole(Role.MANAGER)).thenReturn(Collections.EMPTY_LIST);
+
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(userDatabaseService, times(1)).getUsersByRole(Role.MASTER),
+                () -> verify(userDatabaseService, times(1)).getUsersByRole(Role.MANAGER),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MASTERS, Collections.EMPTY_LIST),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MANAGERS, Collections.EMPTY_LIST),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.ADMIN_PAGE),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
+    }
+
+    @Test
+    public void commandReview_passesActionsChain() {
+        RequestHandleCommand command = contentProvideCommands.getCommands().get(CRAPaths.REVIEWS);
+
+        Page<Review> reviews = Page.empty();
+
+        when(model.getAttribute(Attributes.URI)).thenReturn("URI");
+        when(model.addAttribute(any(), any())).thenReturn(model);
+        when(reviewDatabaseService.getPageableReviews(PageRequest.of(0, PaginationConstants.REVIEWS_FOR_REVIEW_PAGE,
+                Sort.by(Sort.Order.desc(CommonConstants.ID)))))
+                .thenReturn(reviews);
+
+        String returnedResource = command.handleRequest(model);
+
+        assertAll(
+                () -> verify(reviewDatabaseService, times(1))
+                        .getPageableReviews(PageRequest.of(0, PaginationConstants.REVIEWS_FOR_REVIEW_PAGE,
+                                Sort.by(Sort.Order.desc(CommonConstants.ID)))),
+                () -> verify(model, times(1)).addAttribute(Attributes.REVIEWS, reviews.getContent()),
+                () -> verify(model, times(1))
+                        .addAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.REVIEWS),
+                () -> assertEquals(CRA_JSPFiles.CORE_PAGE, returnedResource));
     }
 }

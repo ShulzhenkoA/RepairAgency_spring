@@ -1,5 +1,7 @@
 package ua.javaexternal_shulzhenko.repair_agency.services.editing.impl;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.OrderEditingForm;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.Editor;
@@ -7,14 +9,14 @@ import ua.javaexternal_shulzhenko.repair_agency.services.editing.Editor;
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
+@Scope("prototype")
 public class OrderEditor implements Editor {
-    private final OrderEditingForm form;
-    private final Order order;
+    private OrderEditingForm form;
+    private Order order;
     private final List<OrderEdits> edits;
 
-    public OrderEditor(OrderEditingForm form, Order order) {
-        this.form = form;
-        this.order = order;
+    public OrderEditor() {
         edits = new LinkedList<>();
     }
 
@@ -49,6 +51,16 @@ public class OrderEditor implements Editor {
         if (!form.getManagerComment().equals(order.getManagerComment())) {
             edits.add(OrderEdits.MANAGER_COMMENT);
         }
+        return this;
+    }
+
+    public OrderEditor setForm(OrderEditingForm form) {
+        this.form = form;
+        return this;
+    }
+
+    public OrderEditor setOrder(Order order) {
+        this.order = order;
         return this;
     }
 

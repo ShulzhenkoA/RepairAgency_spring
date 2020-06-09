@@ -9,6 +9,7 @@ import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CommonConstants;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Parameters;
+import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.RequestHandleCommand;
 import ua.javaexternal_shulzhenko.repair_agency.controller.get_commands.impl.ContentProvideCommands;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.*;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
@@ -16,8 +17,11 @@ import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 import ua.javaexternal_shulzhenko.repair_agency.entities.review.Review;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
-import ua.javaexternal_shulzhenko.repair_agency.services.database.OrdersDBService;
-import ua.javaexternal_shulzhenko.repair_agency.services.database.UsersDBService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.OrderDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.ReviewDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.UserDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.editing.EditingValidator;
+import ua.javaexternal_shulzhenko.repair_agency.services.editing.impl.EditingOrderValidator;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.impl.OrderEditor;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.impl.UserEditor;
 
@@ -27,27 +31,32 @@ import javax.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static ua.javaexternal_shulzhenko.repair_agency.services.editing.EditingOrderValidator.*;
-import static ua.javaexternal_shulzhenko.repair_agency.services.database.UsersDBService.*;
-import static ua.javaexternal_shulzhenko.repair_agency.services.database.ReviewsDBService.addReview;
-
+import java.util.Map;
 
 @Controller
 public class PostRequestsController {
 
-    private final UsersDBService usersDBService;
-    private final OrdersDBService ordersDBService;
+    private final UserDatabaseService userDatabaseService;
+    private final OrderDatabaseService orderDatabaseService;
+    private final ReviewDatabaseService reviewDatabaseService;
+    private final ContentProvideCommands contentProvideCommands;
 
     @Autowired
-    public PostRequestsController(UsersDBService usersDBService, OrdersDBService ordersDBService) {
-        this.usersDBService = usersDBService;
-        this.ordersDBService = ordersDBService;
+    public PostRequestsController(UserDatabaseService userDatabaseService,
+                                  OrderDatabaseService orderDatabaseService,
+                                  ReviewDatabaseService reviewDatabaseService,
+                                  ContentProvideCommands contentProvideCommands) {
+        this.userDatabaseService = userDatabaseService;
+        this.orderDatabaseService = orderDatabaseService;
+        this.reviewDatabaseService = reviewDatabaseService;
+        this.contentProvideCommands = contentProvideCommands;
     }
 
     @PostMapping(CRAPaths.LOGIN)
     public String handlePostRequest(Model model) {
-        return ContentProvideCommands.COMMANDS.get(CRAPaths.LOGIN).handleRequest(model);
+        Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+        RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.LOGIN);
+        return requestHandleCommand.handleRequest(model);
     }
 
     @PostMapping(CRAPaths.REGISTRATION)
@@ -55,14 +64,14 @@ public class PostRequestsController {
                                      Model model, HttpServletResponse resp) {
 
         String email = registrationForm.getEmail();
-        boolean emailIsUnavailable = userWithEmailExist(email);
+        boolean emailIsAvailable = userDatabaseService.userEmailIsAvailable(email);
 
         if (!bindingResult.hasErrors() &&
                 registrationForm.confirmationPassMatch() &&
-                    !emailIsUnavailable) {
+                emailIsAvailable) {
 
             User user = registrationForm.extractUser();
-            createUser(user);
+            userDatabaseService.createUser(user);
             model.addAttribute(Attributes.SUCCESS, "");
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -72,12 +81,14 @@ public class PostRequestsController {
             if (!registrationForm.confirmationPassMatch()) {
                 model.addAttribute(Attributes.WRONG_PASS_CONFIRMATION, "");
             }
-            if (emailIsUnavailable) {
+            if (!emailIsAvailable) {
                 model.addAttribute(Attributes.NOT_FREE_EMAIL, "");
             }
         }
 
-        return ContentProvideCommands.COMMANDS.get(CRAPaths.REGISTRATION).handleRequest(model);
+        Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+        RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.REGISTRATION);
+        return requestHandleCommand.handleRequest(model);
     }
 
     @PostMapping(CRAPaths.MAN_MAS_REGISTRATION)
@@ -85,25 +96,30 @@ public class PostRequestsController {
                                            Model model, HttpServletResponse resp) {
 
         handleRegistration(registrationForm, bindingResult, model, resp);
-        return ContentProvideCommands.COMMANDS.get(CRAPaths.MAN_MAS_REGISTRATION).handleRequest(model);
+
+        Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+        RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.MAN_MAS_REGISTRATION);
+        return requestHandleCommand.handleRequest(model);
     }
 
     @PostMapping(CRAPaths.EDIT_USER)
     public String handleEditUser(@Valid UserEditingForm editingForm, BindingResult bindingResult,
-                                 Model model, HttpServletResponse resp) {
+                                 Model model, HttpServletResponse resp, UserEditor userEditor) {
 
         int userId = editingForm.getId();
         String email = editingForm.getEmail();
-        boolean emailIsAvailable = userEmailIsAvailable(email, userId);
+        boolean emailIsAvailable = userDatabaseService.userEmailIsAvailable(email, userId);
 
         if (!bindingResult.hasErrors() && emailIsAvailable) {
-            User user = getUserById(editingForm.getId());
-            UserEditor userEditor = new UserEditor(editingForm, user)
+            User user = userDatabaseService.getUserById(editingForm.getId());
+            userEditor
+                    .setForm(editingForm)
+                    .setUser(user)
                     .compareFirstName()
                     .compareLastName()
                     .compareEmail()
                     .compareRole();
-            usersDBService.editUser(user, editingForm, userEditor.getEdits());
+            userDatabaseService.editUser(user, editingForm, userEditor.getEdits());
             return CommonConstants.REDIRECT + CRAPaths.ADMIN_HOME;
         } else {
             if (!emailIsAvailable) {
@@ -112,23 +128,23 @@ public class PostRequestsController {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             model.addAttribute(Attributes.BINDING_RESULT, bindingResult);
             model.addAttribute(Attributes.PREV_FORM, editingForm);
-            return ContentProvideCommands.COMMANDS.get(CRAPaths.EDIT_USER).handleRequest(model);
+
+            Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+            RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.EDIT_USER);
+            return requestHandleCommand.handleRequest(model);
         }
     }
 
-
     @PostMapping(CRAPaths.DELETE_USER)
     public String handleDeleteUser(@RequestParam() int userId) {
-
-        deleteUser(userId);
+        userDatabaseService.deleteUser(userId);
         return CommonConstants.REDIRECT + CRAPaths.ADMIN_HOME;
     }
 
 
     @PostMapping(CRAPaths.CREATE_ORDER)
     public String handleCreateOrder(@Valid OrderForm orderForm, BindingResult bindingResult, Model model,
-                                    @SessionAttribute(name = Attributes.USER, required = false) User customer,
-                                    HttpServletResponse resp) {
+                                    HttpServletResponse resp, @SessionAttribute(name = Attributes.USER) User customer) {
 
         if (bindingResult.hasErrors()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -137,34 +153,39 @@ public class PostRequestsController {
         } else {
             Order order = orderForm.extractOrder();
             order.setCustomer(customer);
-            ordersDBService.createOrder(order);
+            orderDatabaseService.createOrder(order);
             model.addAttribute(Attributes.MADE_ORDER, order);
         }
 
-        return ContentProvideCommands.COMMANDS.get(CRAPaths.CREATE_ORDER).handleRequest(model);
+        Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+        RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.CREATE_ORDER);
+        return requestHandleCommand.handleRequest(model);
     }
 
     @PostMapping(CRAPaths.EDIT_ORDER)
     public String handleEditOrder(@Valid OrderEditingForm editingForm, BindingResult bindingResult,
-                                  Model model, HttpServletResponse resp) {
+                                  Model model, HttpServletResponse resp, OrderEditor orderEditor,
+                                  EditingOrderValidator editingOrderValidator) {
 
         int orderId = editingForm.getId();
-        Order order = OrdersDBService.getOrderById(orderId);
+        Order order = orderDatabaseService.getOrderById(orderId);
 
         if (!bindingResult.hasErrors() &&
-                !needMasterForThisStatus(editingForm, model) &&
-                    !needPreviousPrice(editingForm, bindingResult, model)) {
+                !editingOrderValidator.needMasterForThisStatus(editingForm, model) &&
+                !editingOrderValidator.needPreviousPrice(editingForm, bindingResult, model)) {
 
-            OrderEditor editor = new OrderEditor(editingForm, order)
+            orderEditor
+                    .setForm(editingForm)
+                    .setOrder(order)
                     .comparePrice()
                     .compareMasters()
                     .compareStatus()
                     .compareManagerComment();
-            ordersDBService.editOrder(order, editingForm, editor.getEdits());
+            orderDatabaseService.editOrder(order, editingForm, orderEditor.getEdits());
             return CommonConstants.REDIRECT + CRAPaths.MANAGER_HOME;
         } else {
 
-            List<User> masters = getUsersByRole(Role.MASTER);
+            List<User> masters = userDatabaseService.getUsersByRole(Role.MASTER);
 
             OrderStatus status = order.getStatus();
 
@@ -173,25 +194,28 @@ public class PostRequestsController {
             model.addAttribute(Attributes.MASTERS, masters);
             model.addAttribute(Attributes.BINDING_RESULT, bindingResult);
             model.addAttribute(Attributes.PREV_FORM, editingForm);
-            return ContentProvideCommands.COMMANDS.get(CRAPaths.EDIT_ORDER).handleRequest(model);
+
+            Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+            RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.EDIT_ORDER);
+            return requestHandleCommand.handleRequest(model);
         }
     }
 
     @PostMapping(CRAPaths.EDIT_STATUS)
     public String handleEditStatus(@RequestParam OrderStatus status, @RequestParam int orderID) {
 
-        if( status.equals(OrderStatus.REPAIR_WORK)){
-            ordersDBService.changeOrderStatus(orderID, status);
-        } else if (status.equals(OrderStatus.REPAIR_COMPLETED)){
-            ordersDBService.changeOrderStatus(orderID, status, LocalDateTime.now());
+        if (status.equals(OrderStatus.REPAIR_WORK)) {
+            orderDatabaseService.changeOrderStatus(orderID, status);
+        } else if (status.equals(OrderStatus.REPAIR_COMPLETED)) {
+            orderDatabaseService.changeOrderStatus(orderID, status, LocalDateTime.now());
         }
         return CommonConstants.REDIRECT + CRAPaths.MASTER_HOME;
     }
 
     @PostMapping({CRAPaths.REVIEWS})
     public String handleReviews(@Valid ReviewForm reviewForm, BindingResult bindingResult, Model model,
-                                @SessionAttribute(name = Attributes.USER, required = false) User customer,
-                                HttpServletRequest req, HttpServletResponse resp) {
+                                HttpServletRequest req, HttpServletResponse resp,
+                                @SessionAttribute(name = Attributes.USER, required = false) User customer) {
 
         if (bindingResult.hasErrors()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -200,7 +224,7 @@ public class PostRequestsController {
         } else {
             Review review = reviewForm.extractReview();
             review.setCustomer(customer);
-            addReview(review);
+            reviewDatabaseService.addReview(review);
             model.addAttribute(Attributes.SUCCESS, "");
         }
         String pageNum = req.getParameter(Parameters.PAGE);
@@ -208,7 +232,10 @@ public class PostRequestsController {
 
         model.addAttribute(Attributes.PAGE_NUM, pageNum);
         model.addAttribute(Attributes.URI, uri);
-        return ContentProvideCommands.COMMANDS.get(CRAPaths.REVIEWS).handleRequest(model);
+
+        Map<String, RequestHandleCommand> commands = contentProvideCommands.getCommands();
+        RequestHandleCommand requestHandleCommand = commands.get(CRAPaths.REVIEWS);
+        return requestHandleCommand.handleRequest(model);
     }
 }
 

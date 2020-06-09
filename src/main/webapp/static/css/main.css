@@ -216,7 +216,7 @@ main #userInfo .col-md-3 {
 }
 
 #pageBody {
-    min-height: 450px;
+    min-height: 250px;
 }
 
 .list-group,

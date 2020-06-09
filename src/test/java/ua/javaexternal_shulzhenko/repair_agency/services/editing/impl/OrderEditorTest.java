@@ -1,32 +1,28 @@
 package ua.javaexternal_shulzhenko.repair_agency.services.editing.impl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.OrderEditingForm;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class OrderEditorTest {
 
+    @Autowired
     private OrderEditor editor;
-    private List<OrderEditor.OrderEdits> edits = new LinkedList<>();
+
+    private List<OrderEditor.OrderEdits> edits;
 
     @MockBean
     OrderEditingForm editingForm;
@@ -35,15 +31,13 @@ class OrderEditorTest {
     Order order;
 
     @BeforeEach
-    void init() {
-        MockitoAnnotations.initMocks(this);
-        editor = new OrderEditor(editingForm, order);
-        edits.clear();
+    void setUp(){
+        editor.setForm(editingForm).setOrder(order);
     }
 
     @ParameterizedTest
     @CsvSource({"100, 15.4", "65.32, 10"})
-    void comparing_differentPrice_giveOnePriceEdit(String formPrice, double orderPrice) {
+    void comparing_differentPrice_givesOnePriceEdit(String formPrice, double orderPrice) {
         when(editingForm.getPrice()).thenReturn(formPrice);
         when(order.getPrice()).thenReturn(orderPrice);
         editor = editor.comparePrice();
@@ -55,7 +49,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"100, 100.0", "65.32, 65.32"})
-    void comparing_samePrice_giveNoEdit(String formPrice, double orderPrice) {
+    void comparing_samePrice_givesNoEdit(String formPrice, double orderPrice) {
         when(editingForm.getPrice()).thenReturn(formPrice);
         when(order.getPrice()).thenReturn(orderPrice);
         editor = editor.comparePrice();
@@ -65,7 +59,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"21, 15", "3, 31"})
-    void comparing_differentMasters_giveOneMasterEdit(int formMasterID, int orderMasterID) {
+    void comparing_differentMasters_givesOneMasterEdit(int formMasterID, int orderMasterID) {
         User user = User.builder()
                 .id(orderMasterID).build();
         when(editingForm.getMasterID()).thenReturn(formMasterID);
@@ -79,7 +73,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"21, 21", "3, 3"})
-    void comparing_sameMasters_giveNoEdit(int formMasterID, int orderMasterID) {
+    void comparing_sameMasters_givesNoEdit(int formMasterID, int orderMasterID) {
         User user = User.builder().id(orderMasterID).build();
         when(editingForm.getMasterID()).thenReturn(formMasterID);
         when(order.getMaster()).thenReturn(user);
@@ -90,7 +84,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"REJECTED, CAR_WAITING", "REPAIR_COMPLETED, ORDER_COMPLETED"})
-    void comparing_differentStatuses_giveOneStatusEdit(String formStatus, String orderStatus) {
+    void comparing_differentStatuses_givesOneStatusEdit(String formStatus, String orderStatus) {
         when(editingForm.getStatus()).thenReturn(OrderStatus.valueOf(formStatus));
         when(order.getStatus()).thenReturn(OrderStatus.valueOf(orderStatus));
         editor = editor.compareStatus();
@@ -102,7 +96,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"CAR_WAITING, CAR_WAITING", "REPAIR_COMPLETED, REPAIR_COMPLETED"})
-    void comparing_sameStatuses_giveNoEdit(String formStatus, String orderStatus) {
+    void comparing_sameStatuses_givesNoEdit(String formStatus, String orderStatus) {
         when(editingForm.getStatus()).thenReturn(OrderStatus.valueOf(formStatus));
         when(order.getStatus()).thenReturn(OrderStatus.valueOf(orderStatus));
         editor = editor.compareStatus();
@@ -113,7 +107,7 @@ class OrderEditorTest {
     @ParameterizedTest
     @CsvSource({"Comment from form, Comment from database",
             "Another comment from form, Another comment form database"})
-    void comparing_differentManagerComments_giveOneStatusEdit(String formComment, String orderComment) {
+    void comparing_differentManagerComments_givesOneStatusEdit(String formComment, String orderComment) {
         when(editingForm.getManagerComment()).thenReturn(formComment);
         when(order.getManagerComment()).thenReturn(orderComment);
         editor = editor.compareManagerComment();
@@ -126,7 +120,7 @@ class OrderEditorTest {
     @ParameterizedTest
     @CsvSource({"Comment is same in the form and database, Comment is same in the form and database",
             "Another comment is same in the from and database, Another comment is same in the from and database"})
-    void comparing_sameManagerComments_giveNoEdit(String formComment, String orderComment) {
+    void comparing_sameManagerComments_givesNoEdit(String formComment, String orderComment) {
         when(editingForm.getManagerComment()).thenReturn(formComment);
         when(order.getManagerComment()).thenReturn(orderComment);
         editor = editor.compareManagerComment();
@@ -137,7 +131,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"100.50, 21, REJECTED, Some comment, 15.25, 3, CAR_WAITING, Other comment"})
-    void comparing_differentData_giveFourEdits(String formPrice, int formMasterID, String formStatus, String formComment,
+    void comparing_differentData_givesFourEdits(String formPrice, int formMasterID, String formStatus, String formComment,
                                                double orderPrice, int orderMasterID, String orderStatus, String orderComment) {
         User user = User.builder().id(orderMasterID).build();
         when(editingForm.getPrice()).thenReturn(formPrice);
@@ -160,7 +154,7 @@ class OrderEditorTest {
 
     @ParameterizedTest
     @CsvSource({"100.50, 21, CAR_WAITING, Some comment, 100.50, 21, CAR_WAITING, Some comment"})
-    void comparing_sameData_giveNoEdits(String formPrice, int formMasterID, String formStatus, String formComment,
+    void comparing_sameData_givesNoEdits(String formPrice, int formMasterID, String formStatus, String formComment,
                                         double orderPrice, int orderMasterID, String orderStatus, String orderComment) {
         User user = User.builder().id(orderMasterID).build();
         when(editingForm.getPrice()).thenReturn(formPrice);

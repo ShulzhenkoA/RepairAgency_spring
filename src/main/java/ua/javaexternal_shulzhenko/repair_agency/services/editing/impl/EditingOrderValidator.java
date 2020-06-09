@@ -1,15 +1,17 @@
-package ua.javaexternal_shulzhenko.repair_agency.services.editing;
+package ua.javaexternal_shulzhenko.repair_agency.services.editing.impl;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
-import ua.javaexternal_shulzhenko.repair_agency.constants.CommonConstants;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.OrderEditingForm;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
+import ua.javaexternal_shulzhenko.repair_agency.services.editing.EditingValidator;
 
-public interface EditingOrderValidator {
+@Service
+public class EditingOrderValidator implements EditingValidator {
 
-    static boolean needMasterForThisStatus(OrderEditingForm form, Model model){
+    public boolean needMasterForThisStatus(OrderEditingForm form, Model model){
         int masterID = form.getMasterID();
         OrderStatus status = form.getStatus();
         if(!status.equals(OrderStatus.REJECTED) && masterID == 0){
@@ -20,7 +22,7 @@ public interface EditingOrderValidator {
         }
     }
 
-    static boolean needPreviousPrice(OrderEditingForm form, BindingResult bindingResult, Model model){
+    public boolean needPreviousPrice(OrderEditingForm form, BindingResult bindingResult, Model model){
         if(!bindingResult.hasFieldErrors(Attributes.PRICE)){
             double price = Double.parseDouble(form.getPrice());
             OrderStatus status = form.getStatus();

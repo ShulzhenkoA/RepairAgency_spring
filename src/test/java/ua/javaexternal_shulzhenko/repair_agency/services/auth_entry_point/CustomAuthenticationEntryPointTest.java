@@ -1,7 +1,6 @@
 package ua.javaexternal_shulzhenko.repair_agency.services.auth_entry_point;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,8 +9,6 @@ import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
 
 import javax.servlet.RequestDispatcher;
@@ -21,9 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class CustomAuthenticationEntryPointTest {
 
     @InjectMocks
@@ -39,7 +34,7 @@ class CustomAuthenticationEntryPointTest {
     private AuthenticationException exc;
 
     @Test
-    public void promptingResource_whenCustomerHome_redirectToLogin() throws IOException, ServletException {
+    public void promptingResource_whenCustomerHome_redirectsToLogin() throws IOException, ServletException {
         when(req.getServletPath()).thenReturn(CRAPaths.CUSTOMER_HOME);
         when(req.getContextPath()).thenReturn("RepairAgency");
 
@@ -49,7 +44,7 @@ class CustomAuthenticationEntryPointTest {
     }
 
     @Test
-    public void promptingResource_whenMasterHome_redirectToLogin() throws IOException, ServletException {
+    public void promptingResource_whenMasterHome_redirectsToLogin() throws IOException, ServletException {
         when(req.getServletPath()).thenReturn(CRAPaths.MASTER_HOME);
         when(req.getContextPath()).thenReturn("RepairAgency");
 
@@ -59,7 +54,7 @@ class CustomAuthenticationEntryPointTest {
     }
 
     @Test
-    public void promptingResource_whenManagerHome_redirectToLogin() throws IOException, ServletException {
+    public void promptingResource_whenManagerHome_redirectsToLogin() throws IOException, ServletException {
         when(req.getServletPath()).thenReturn(CRAPaths.MANAGER_HOME);
         when(req.getContextPath()).thenReturn("RepairAgency");
 
@@ -69,7 +64,7 @@ class CustomAuthenticationEntryPointTest {
     }
 
     @Test
-    public void promptingResource_whenCreateOrder_redirectToLogin() throws IOException, ServletException {
+    public void promptingResource_whenCreateOrder_redirectsToLogin() throws IOException, ServletException {
         when(req.getServletPath()).thenReturn(CRAPaths.CREATE_ORDER);
         when(req.getContextPath()).thenReturn("RepairAgency");
 
@@ -84,7 +79,7 @@ class CustomAuthenticationEntryPointTest {
             CRAPaths.MASTERS, CRAPaths.MASTER_COMPLETED_ORDERS, CRAPaths.EDIT_STATUS,
             CRAPaths.ADMIN_HOME, CRAPaths.DELETE_USER, CRAPaths.EDIT_USER,
             CRAPaths.MAN_MAS_REGISTRATION, CRAPaths.LOGIN, CRAPaths.REGISTRATION, CRAPaths.ERROR})
-    public void promptingResource_whenNotAllowed_sendTo404ErrorPage(String resource) throws IOException, ServletException {
+    public void promptingResource_whenNotAllowed_sendsTo404ErrorPage(String resource) throws IOException, ServletException {
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(req.getServletPath()).thenReturn(resource);
         when(req.getRequestDispatcher(CRAPaths.ERROR)).thenReturn(requestDispatcher);

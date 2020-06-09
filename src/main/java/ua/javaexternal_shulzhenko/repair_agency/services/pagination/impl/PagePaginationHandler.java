@@ -1,25 +1,24 @@
-package ua.javaexternal_shulzhenko.repair_agency.services.pagination;
+package ua.javaexternal_shulzhenko.repair_agency.services.pagination.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CommonConstants;
 import ua.javaexternal_shulzhenko.repair_agency.entities.pagination.PageAddress;
 import ua.javaexternal_shulzhenko.repair_agency.entities.pagination.PaginationModel;
+import ua.javaexternal_shulzhenko.repair_agency.services.pagination.Pagination;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PagePaginationHandler{
+public class PagePaginationHandler implements Pagination {
 
-    public static PaginationModel createPaginationModel(String currentUri, Page<?> page) {
+    public PaginationModel createPaginationModel(String currentUri, Page<?> page) {
 
         int totalPages = page.getTotalPages();
         int currentPageNum = page.getNumber() + 1;
 
-        if (totalPages < 2) {
-            return null;
-        }
+        if (totalPages < 2) { return null; }
 
         String previousUrl = createPreviousUri(currentUri, page);
         String nextUrl = createNextUri(currentUri, page);

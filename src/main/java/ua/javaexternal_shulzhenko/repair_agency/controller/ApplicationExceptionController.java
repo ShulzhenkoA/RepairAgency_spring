@@ -16,7 +16,7 @@ public class ApplicationExceptionController {
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
-    public String handleSQLException(HttpServletRequest req, Exception exc) {
+    public String handleException(HttpServletRequest req, Exception exc) {
         log.error("Internal server error: " + req.getRequestURI(), exc);
         req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE500);
         return CRA_JSPFiles.CORE_PAGE;

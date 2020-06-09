@@ -1,13 +1,10 @@
 package ua.javaexternal_shulzhenko.repair_agency.services.auth_failure;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CommonConstants;
@@ -20,9 +17,7 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class CustomAuthenticationFailureHandlerTest {
 
     @InjectMocks
@@ -38,7 +33,7 @@ class CustomAuthenticationFailureHandlerTest {
     private AuthenticationException exc;
 
     @Test
-    public void handlingFailure_whenBadCredentials_setCorrespondingAttribute() throws IOException, ServletException {
+    public void handlingFailure_whenBadCredentials_setsCorrespondingAttribute() throws IOException, ServletException {
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(req.getRequestDispatcher(CRAPaths.LOGIN)).thenReturn(requestDispatcher);
         when(exc.getMessage()).thenReturn(CommonConstants.BAD_CREDENTIALS);
@@ -49,7 +44,7 @@ class CustomAuthenticationFailureHandlerTest {
     }
 
     @Test
-    public void handlingFailure_whenOtherExcMessage_setEmailAttribute() throws IOException, ServletException {
+    public void handlingFailure_whenOtherExcMessage_setsEmailAttribute() throws IOException, ServletException {
         RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
         when(req.getRequestDispatcher(CRAPaths.LOGIN)).thenReturn(requestDispatcher);
         when(exc.getMessage()).thenReturn("Some message describing email authentication error.");

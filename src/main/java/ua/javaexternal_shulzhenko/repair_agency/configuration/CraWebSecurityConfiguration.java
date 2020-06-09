@@ -12,7 +12,7 @@ import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.services.auth_entry_point.CustomAuthenticationEntryPoint;
 import ua.javaexternal_shulzhenko.repair_agency.services.auth_failure.CustomAuthenticationFailureHandler;
 import ua.javaexternal_shulzhenko.repair_agency.services.auth_success.CustomAuthenticationSuccessHandler;
-import ua.javaexternal_shulzhenko.repair_agency.services.database.UsersDBService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.UserDatabaseService;
 
 import static ua.javaexternal_shulzhenko.repair_agency.services.encoding.PasswordEncodingService.*;
 
@@ -20,18 +20,18 @@ import static ua.javaexternal_shulzhenko.repair_agency.services.encoding.Passwor
 @EnableWebSecurity
 public class CraWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    UsersDBService usersDBService;
+    UserDatabaseService userDatabaseService;
     CustomAuthenticationSuccessHandler authenticationSuccessHandler;
     CustomAuthenticationFailureHandler authenticationFailureHandler;
     CustomAuthenticationEntryPoint entryPoint;
 
     @Autowired
-    public CraWebSecurityConfiguration(UsersDBService usersDBService,
+    public CraWebSecurityConfiguration(UserDatabaseService userDatabaseService,
                                        CustomAuthenticationSuccessHandler authenticationSuccessHandler,
                                        CustomAuthenticationFailureHandler authenticationFailureHandler,
                                        CustomAuthenticationEntryPoint entryPoint) {
 
-        this.usersDBService = usersDBService;
+        this.userDatabaseService = userDatabaseService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.entryPoint = entryPoint;
@@ -77,6 +77,6 @@ public class CraWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(usersDBService).passwordEncoder(gerBCryptPasswordEncoder());
+        auth.userDetailsService(userDatabaseService).passwordEncoder(gerBCryptPasswordEncoder());
     }
 }

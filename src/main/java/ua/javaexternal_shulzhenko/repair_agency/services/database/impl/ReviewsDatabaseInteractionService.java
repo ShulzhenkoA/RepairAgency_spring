@@ -1,27 +1,28 @@
-package ua.javaexternal_shulzhenko.repair_agency.services.database;
+package ua.javaexternal_shulzhenko.repair_agency.services.database.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.javaexternal_shulzhenko.repair_agency.entities.review.Review;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.ReviewDatabaseService;
 import ua.javaexternal_shulzhenko.repair_agency.services.database.repository.ReviewsRepository;
 
 @Service
-public final class ReviewsDBService {
+public class ReviewsDatabaseInteractionService implements ReviewDatabaseService {
 
     private static ReviewsRepository reviewsRepository;
 
     @Autowired
-    public ReviewsDBService(ReviewsRepository reviewsRepository) {
-        ReviewsDBService.reviewsRepository = reviewsRepository;
+    public ReviewsDatabaseInteractionService(ReviewsRepository reviewsRepository) {
+        ReviewsDatabaseInteractionService.reviewsRepository = reviewsRepository;
     }
 
-    public static void addReview(Review review){
+    public void addReview(Review review){
         reviewsRepository.save(review);
     }
 
-    public static Page<Review> getPageableReviews(Pageable pageable){
+    public Page<Review> getPageableReviews(Pageable pageable){
         return reviewsRepository.findAll(pageable);
     }
 }

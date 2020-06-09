@@ -1,32 +1,32 @@
-package ua.javaexternal_shulzhenko.repair_agency.services.database;
+package ua.javaexternal_shulzhenko.repair_agency.services.database.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.javaexternal_shulzhenko.repair_agency.entities.forms.UserEditingForm;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.Role;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 import ua.javaexternal_shulzhenko.repair_agency.exceptions.DataBaseInteractionException;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.UserDatabaseService;
 import ua.javaexternal_shulzhenko.repair_agency.services.database.repository.UsersRepository;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.impl.UserEditor;
 
 import java.util.List;
 
 @Service
-public class UsersDBService implements UserDetailsService {
+public class UsersDatabaseInteractionService implements UserDatabaseService {
 
     private static UsersRepository userRepository;
 
     @Autowired
-    public UsersDBService(UsersRepository userRepository) {
-        UsersDBService.userRepository = userRepository;
+    public UsersDatabaseInteractionService(UsersRepository userRepository) {
+        UsersDatabaseInteractionService.userRepository = userRepository;
     }
 
-    public static void createUser(User user) {
+    public void createUser(User user) {
         userRepository.save(user);
     }
 
@@ -35,30 +35,30 @@ public class UsersDBService implements UserDetailsService {
         return userRepository.findUsersByEmail(email);
     }
 
-    public static User getUserById(int userId){
+    public User getUserById(int userId){
         return userRepository.getOne(userId);
     }
 
-    public static List<User> getUsersByRole(Role role) {
+    public List<User> getUsersByRole(Role role) {
         return userRepository.findAllByRoleOrderByIdDesc(role);
     }
 
-    public static Page<User> getPageableUsersByRole(Role role, Pageable pageable) {
+    public Page<User> getPageableUsersByRole(Role role, Pageable pageable) {
         return userRepository.findAllByRole(role, pageable);
     }
 
-    public static boolean userEmailIsAvailable(String email, int userID) {
+    public boolean userEmailIsAvailable(String email, int userID) {
         User user = userRepository.findUsersByEmail(email);
         return user == null || userID == user.getId();
     }
 
-    public static boolean userWithEmailExist(String email) {
-        return userRepository.findUsersByEmail(email) != null;
+    public boolean userEmailIsAvailable(String email) {
+        return userRepository.findUsersByEmail(email) == null;
     }
 
     @Transactional
     public void editUser(User user, UserEditingForm editingForm, List<UserEditor.UserEdits> edits){
-        for (UserEditor.UserEdits edit: edits) {
+        for (UserEditor.UserEdits edit : edits) {
             switch (edit) {
                 case FIRST_NAME:
                     user.setFirstName(editingForm.getFirstName());
@@ -78,7 +78,7 @@ public class UsersDBService implements UserDetailsService {
         }
     }
 
-    public static void deleteUser(int userId) {
+    public void deleteUser(int userId) {
         userRepository.deleteById(userId);
     }
 }

@@ -1,4 +1,4 @@
-package ua.javaexternal_shulzhenko.repair_agency.services.database;
+package ua.javaexternal_shulzhenko.repair_agency.services.database.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,23 +10,27 @@ import ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.Order;
 import ua.javaexternal_shulzhenko.repair_agency.entities.user.User;
 import ua.javaexternal_shulzhenko.repair_agency.exceptions.DataBaseInteractionException;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.OrderDatabaseService;
+import ua.javaexternal_shulzhenko.repair_agency.services.database.UserDatabaseService;
 import ua.javaexternal_shulzhenko.repair_agency.services.database.repository.OrderRepository;
 import ua.javaexternal_shulzhenko.repair_agency.services.editing.impl.OrderEditor;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class OrdersDBService {
+public class OrdersDatabaseInteractionService implements OrderDatabaseService {
 
     private static OrderRepository orderRepository;
+    private final UserDatabaseService userDatabaseService;
 
     @Autowired
-    public OrdersDBService(OrderRepository orderRepository){
-        OrdersDBService.orderRepository = orderRepository;
+    public OrdersDatabaseInteractionService(OrderRepository orderRepository,
+                                            UserDatabaseService userDatabaseService){
+        OrdersDatabaseInteractionService.orderRepository = orderRepository;
+        this.userDatabaseService = userDatabaseService;
     }
 
     @Transactional
@@ -34,52 +38,38 @@ public class OrdersDBService {
         orderRepository.save(order);
     }
 
-    public static Order getOrderById(int id){
+    public Order getOrderById(int id){
         return orderRepository.getOne(id);
     }
 
-    public static Page<Order> getPageableOrderByStatus(OrderStatus status, Pageable pageable){
+    public Page<Order> getPageableOrdersByStatuses(Pageable pageable, OrderStatus... status){
 
-        Collection<OrderStatus> statuses = Collections.singletonList(status);
+        Collection<OrderStatus> statuses = Arrays.asList(status);
         return orderRepository.findAllByStatusIn(statuses, pageable);
     }
 
-    public static Page<Order> getPageableOrdersByTwoStatuses(
-            OrderStatus status, OrderStatus secondStatus, Pageable pageable){
-
-        Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus);
-        return orderRepository.findAllByStatusIn(statuses, pageable);
-    }
-
-    public static Page<Order> getPageableOrdersByThreeStatuses(
-            OrderStatus status, OrderStatus secondStatus, OrderStatus thirdStatus, Pageable pageable){
-
-        Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus, thirdStatus);
-        return orderRepository.findAllByStatusIn(statuses, pageable);
-    }
-
-    public static Page<Order> getPageableOrdersByTwoStatusesForCustomer(
+    public Page<Order> getPageableOrdersByTwoStatusesForCustomer(
             OrderStatus status, OrderStatus secondStatus, int customerId, Pageable pageable){
 
         Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus);
         return orderRepository.findAllByCustomer_IdAndStatusIn(customerId, statuses, pageable);
     }
 
-    public static Page<Order> getPageableOrdersByTwoExcludeStatusesForCustomer(
+    public Page<Order> getPageableOrdersByTwoExcludeStatusesForCustomer(
             OrderStatus status, OrderStatus secondStatus, int customerId, Pageable pageable){
 
         Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus);
         return orderRepository.findAllByCustomer_IdAndStatusNotIn(customerId, statuses, pageable);
     }
 
-    public static Page<Order> getPageableOrdersByTwoStatusesForMaster(
+    public Page<Order> getPageableOrdersByTwoStatusesForMaster(
             OrderStatus status, OrderStatus secondStatus, int masterId, Pageable pageable){
 
         Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus);
         return orderRepository.findAllByMaster_IdAndStatusIn(masterId, statuses, pageable);
     }
 
-    public static Page<Order> getPageableOrdersByTwoExcludeStatusesForMaster(
+    public Page<Order> getPageableOrdersByTwoExcludeStatusesForMaster(
             OrderStatus status, OrderStatus secondStatus, int masterId, Pageable pageable){
 
         Collection<OrderStatus> statuses = Arrays.asList(status, secondStatus);
@@ -107,7 +97,7 @@ public class OrdersDBService {
                     order.setPrice(Double.parseDouble(editingForm.getPrice()));
                     break;
                 case MASTER_ID:
-                    User master = UsersDBService.getUserById(editingForm.getMasterID());
+                    User master = userDatabaseService.getUserById(editingForm.getMasterID());
                     order.setMaster(master);
                     break;
                 case STATUS:

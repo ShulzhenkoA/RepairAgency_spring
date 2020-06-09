@@ -1,14 +1,13 @@
 package ua.javaexternal_shulzhenko.repair_agency.controller;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ui.Model;
 import ua.javaexternal_shulzhenko.repair_agency.constants.Attributes;
 import ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths;
@@ -21,12 +20,11 @@ import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
 class GetRequestsControllerTest {
 
-    @InjectMocks
+    @Autowired
     private GetRequestsController controller;
 
     @MockBean
@@ -36,7 +34,7 @@ class GetRequestsControllerTest {
     private Model model;
 
     @Test
-    public void handlingLanguageRequest_returnRedirectReferer(){
+    public void handlingLanguageRequest_returnsRedirectReferer() {
         when(req.getHeader(CommonConstants.REFERER)).thenReturn("/referer_path");
 
         String returnedResource = controller.handleLanguageChanging(req);
@@ -45,9 +43,9 @@ class GetRequestsControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
+    @ValueSource(strings = {CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
             CRAPaths.ORDER_HISTORY, CRAPaths.CUSTOMERS, CRAPaths.MASTERS})
-    public void handlingPaginatedRequest_setsPageNumAttribute(String resource){
+    public void handlingPaginatedRequest_setsPageNumAttribute(String resource) {
         when(req.getServletPath()).thenReturn(resource);
         when(model.addAttribute(any(), any())).thenReturn(model);
 
@@ -57,9 +55,9 @@ class GetRequestsControllerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
+    @ValueSource(strings = {CRAPaths.REVIEWS, CRAPaths.MANAGER_HOME, CRAPaths.ACTIVE_ORDERS,
             CRAPaths.ORDER_HISTORY, CRAPaths.CUSTOMERS, CRAPaths.MASTERS})
-    public void handlingPaginatedRequest_setsUriAttribute(String resource){
+    public void handlingPaginatedRequest_setsUriAttribute(String resource) {
         when(req.getServletPath()).thenReturn(resource);
         when(req.getRequestURI()).thenReturn(resource);
         when(model.addAttribute(any(), any())).thenReturn(model);
@@ -72,7 +70,7 @@ class GetRequestsControllerTest {
     @ParameterizedTest
     @CsvSource({CRAPaths.CUSTOMER_HOME, CRAPaths.CUSTOMER_ORDER_HISTORY,
             CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void handlingPaginatedRequestsForConcreteUser_setsPageNumAttribute(String resource){
+    public void handlingPaginatedRequestsForConcreteUser_setsPageNumAttribute(String resource) {
         User user = User.builder().id(1).build();
 
         when(req.getServletPath()).thenReturn(resource);
@@ -87,7 +85,7 @@ class GetRequestsControllerTest {
     @ParameterizedTest
     @CsvSource({CRAPaths.CUSTOMER_HOME, CRAPaths.CUSTOMER_ORDER_HISTORY,
             CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void handlingPaginatedRequestsForConcreteUser_setsUriAttribute(String resource){
+    public void handlingPaginatedRequestsForConcreteUser_setsUriAttribute(String resource) {
         User user = User.builder().id(1).build();
 
         when(req.getServletPath()).thenReturn(resource);
@@ -103,7 +101,7 @@ class GetRequestsControllerTest {
     @ParameterizedTest
     @CsvSource({CRAPaths.CUSTOMER_HOME, CRAPaths.CUSTOMER_ORDER_HISTORY,
             CRAPaths.MASTER_HOME, CRAPaths.MASTER_COMPLETED_ORDERS})
-    public void handlingPaginatedRequestsForConcreteUser_setsUserIdAttribute(String resource){
+    public void handlingPaginatedRequestsForConcreteUser_setsUserIdAttribute(String resource) {
         User user = User.builder().id(1).build();
 
         when(req.getServletPath()).thenReturn(resource);

@@ -22,11 +22,11 @@ public final class CustomAuthenticationFailureHandler implements AuthenticationF
                                         AuthenticationException exc) throws IOException, ServletException {
 
         if (exc.getMessage().equals(CommonConstants.BAD_CREDENTIALS)) {
-            log.warn("Attempt to log in using non-existing email: " + req.getParameter(Parameters.EMAIL) +
+            log.warn("Wrong password log in attempt. User: " + req.getParameter(Parameters.EMAIL) +
                     "\t User-Agent: " + req.getHeader(Parameters.USER_AGENT));
             req.setAttribute(Attributes.PASS, "");
         } else {
-            log.warn("Wrong password log in attempt. User: " + req.getParameter(Parameters.EMAIL) +
+            log.warn( "Attempt to log in using non-existing email: " + req.getParameter(Parameters.EMAIL) +
                     "\t User-Agent: " + req.getHeader(Parameters.USER_AGENT));
             req.setAttribute(Attributes.EMAIL, "");
         }

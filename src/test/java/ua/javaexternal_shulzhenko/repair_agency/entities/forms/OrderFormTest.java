@@ -1,13 +1,10 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType;
 
 import javax.validation.ConstraintViolation;
@@ -17,9 +14,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
+
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class OrderFormTest {
 
     @Autowired
@@ -28,7 +24,7 @@ class OrderFormTest {
 
     @ParameterizedTest
     @CsvSource({"Car brand, Car model-100, 2015"})
-    public void validateOrderForm_withValidData_returnNoViolations(
+    public void validateOrderForm_withValidData_returnsNoViolations(
             String carBrand, String carModel, String carYear) {
         OrderForm orderForm = OrderForm
                 .builder()
@@ -45,7 +41,7 @@ class OrderFormTest {
 
     @ParameterizedTest
     @ValueSource(strings = {" Brand", "Brand/", "1brand", "1234", "b", "Brand0123456789012345678901234567"})
-    public void validateOrderForm_withInvalidCarBrand_returnSingleCorrespondingViolation(String carBrand) {
+    public void validateOrderForm_withInvalidCarBrand_returnsSingleCorrespondingViolation(String carBrand) {
         OrderForm orderForm = OrderForm
                 .builder()
                 .carBrand(carBrand)
@@ -64,7 +60,7 @@ class OrderFormTest {
 
     @ParameterizedTest
     @ValueSource(strings = {" Model", "Model+", "m", "Model0123456789012345678901234567"})
-    public void validateOrderForm_withInvalidCarModel_returnSingleCorrespondingViolation(
+    public void validateOrderForm_withInvalidCarModel_returnsSingleCorrespondingViolation(
             String carModel) {
         OrderForm orderForm = OrderForm
                 .builder()
@@ -85,7 +81,7 @@ class OrderFormTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"2100", "1899", "200+", "20001", "199"})
-    public void validateOrderForm_withInvalidCarYear_returnSingleCorrespondingViolation(String carYear) {
+    public void validateOrderForm_withInvalidCarYear_returnsSingleCorrespondingViolation(String carYear) {
         OrderForm orderForm = OrderForm
                 .builder()
                 .carBrand("Brand")

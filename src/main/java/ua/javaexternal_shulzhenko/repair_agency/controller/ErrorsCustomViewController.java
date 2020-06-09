@@ -24,7 +24,7 @@ public class ErrorsCustomViewController implements ErrorController {
 
             int code = Integer.parseInt(stCode.toString());
 
-            if(code <= HttpStatus.INTERNAL_SERVER_ERROR.value()){
+            if(code < HttpStatus.INTERNAL_SERVER_ERROR.value()){
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE404);
             } else {
                 req.setAttribute(Attributes.MAIN_BLOCK, CRA_JSPFiles.PAGE500);

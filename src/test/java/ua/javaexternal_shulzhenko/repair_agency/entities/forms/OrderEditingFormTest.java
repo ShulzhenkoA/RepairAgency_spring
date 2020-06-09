@@ -1,12 +1,9 @@
 package ua.javaexternal_shulzhenko.repair_agency.entities.forms;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -15,9 +12,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@TestPropertySource("/application-test.properties")
 class OrderEditingFormTest {
 
     @Autowired
@@ -25,7 +20,7 @@ class OrderEditingFormTest {
    
     @ParameterizedTest
     @ValueSource(strings = {"100", "0.01", "99.99", "0", "0.0", "0,1"})
-    public void validateOrderEditingForm_withValidData_returnNoViolations(String price) {
+    public void validateOrderEditingForm_withValidData_returnsNoViolations(String price) {
         OrderEditingForm orderEditingForm = OrderEditingForm
                 .builder()
                 .price(price)
@@ -38,7 +33,7 @@ class OrderEditingFormTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"1b", "1.0.0", "0.001", "1+0", ".0", "1."})
-    public void validateOrderEditingForm_withInvalidPrice_returnSingleCorrespondingViolation(String price) {
+    public void validateOrderEditingForm_withInvalidPrice_returnsSingleCorrespondingViolation(String price) {
         OrderEditingForm orderEditingForm = OrderEditingForm
                 .builder()
                 .price(price)
@@ -54,7 +49,7 @@ class OrderEditingFormTest {
 
     @ParameterizedTest
     @ValueSource(strings = " ")
-    public void validateOrderEditingForm_withBlankComment_returnSingleCorrespondingViolation(String managerComment) {
+    public void validateOrderEditingForm_withBlankComment_returnsSingleCorrespondingViolation(String managerComment) {
         OrderEditingForm orderEditingForm = OrderEditingForm
                 .builder()
                 .price("100")

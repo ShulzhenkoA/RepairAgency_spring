@@ -5,7 +5,8 @@
 
 	<groupId>ua.javaexternal_shulzhenko.repair_agency</groupId>
 	<artifactId>RepairAgency_spring</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
+	<packaging>war</packaging>
 	<name>RepairAgency_spring</name>
 	<description>Repair agency project with Spring</description>
 
