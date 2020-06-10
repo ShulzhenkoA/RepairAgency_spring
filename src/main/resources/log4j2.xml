@@ -4,8 +4,8 @@
         <Console name="LogConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="[%-5p] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%L - %m%n"/>
         </Console>
-        <RollingFile name="ToRollingFile" fileName="E:/Programming/Projects/RepairAgency_spring/log/logs.log"
-                     filePattern="E:/Programming/Projects/RepairAgency_spring/log/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="ToRollingFile" fileName="C:/RepairAgency_spring/log/logs.log"
+                     filePattern="C:/RepairAgency_spring/log/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="[%-5p] %d{yyyy-MM-dd HH:mm:ss.SSS} %c{1}:%L - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>

@@ -1,6 +1,6 @@
 # RepairAgency_spring
 
-System Repair Agency (Car Repair Agency). The user can register, create order for
+__System Repair Agency (Car Repair Agency)__. The user can register, create order for
 car repair, leave review on the work performed. The manager can accept the order, specify the price,
 reject the order, comment the order, view all active orders or order history, view list of masters or customers.
 The master can execute (edit status) the order accepted by the manager, view his active orders or
@@ -11,32 +11,34 @@ ___
 ___
 ### Instructions for installing and running on a local server (Tomcat):
 
-1. Install the JDK at least version 8.
-2. Install MySQl at least version 8 and create a 'root' user with the password 123456789.
-3. Download the project (clone via git (https://github.com/ShulzhenkoA/RepairAgency_spring.git) or download
+1. Install the JDK at least version 8. Set environment variables for Java.
+2. Install MySQl at least version 8 and create a __root__ user with the password: __123456789__.
+3. Download the project (clone via git (_https://github.com/ShulzhenkoA/RepairAgency_spring.git_) or download
 project and unzip).
-4. Create a database and populate it by running the two SQL scripts in the project folder
-(/RepairAgency_spring/src/main/resources/database/CreateRepairAgencyDatabase.sql and
-/RepairAgency_spring/src/main/resources/database/PopulateDB.sql).
-5. Open the 'Command Prompt' (console) from the project folder (RepairAgency_spring) or navigate in the 'Command Prompt' 
-to the project folder (RepairAgency_spring).
-6. > Execute in the 'Command Prompt' the command: mvn spring-boot:run
+4. Create a database and populate it by running two SQL scripts in the project folder
+(/RepairAgency_spring/src/main/resources/database/__CreateRepairAgencyDatabase.sql__ and
+/RepairAgency_spring/src/main/resources/database/__PopulateDB.sql__).
+5. Open the _Command Prompt_ (console) from the project folder (_RepairAgency_spring_) or navigate in the _Command Prompt_ 
+to the project folder (_/RepairAgency_spring_) where contains __pom.xml__.
+6. > Execute in the _Command Prompt_ the command: __mvnw spring-boot:run__
    
    Or
 
-   > Execute in the 'Command Prompt' the commands (in order):
-   >> mvn clean install  
-   >> cd target  
-   >> java -jar RepairAgency_spring-1.0.war
-7. When the Spring boot is complete, go to http://localhost:8090/RepairAgency/home in your browser.
+   > Execute in the _Command Prompt_ the commands (in order):
+   >> __mvnw clean install__  
+   >> __cd target__  
+   >> __java -jar RepairAgency_spring-1.0.war__
+7. When the Spring boot is complete, go to __http://localhost:8090/CarRepairAgency/home__ in your browser.
 8. If the population of the database has been executed (item 4), then the system already has:
-    > Administrator - email: admin@mail.com, password: Admin123;  
-    Client - email: customer@mail.com, password: Customer123;  
-    Master - email: master@mail.com, password: Master123;  
-    Manager - email: manager@mail.com, password: Manager123.
-9. To stop the system press ctrl+c+c in the 'Command Prompt' 
+    > Administrator - email: __admin@mail.com__, password: __Admin123__;  
+    Client - email: __customer@mail.com__, password: __Customer123__;  
+    Master - email: __master@mail.com__, password: __Master123__;  
+    Manager - email: __manager@mail.com__, password: __Manager123__.
+9. To stop the system press __ctrl+c+c__ in the __Command Prompt__. 
 ___
-Система Ремонтне Агенство(Агенство з Ремонту Автомобілів). Користувач може зареєструватися, створити заявку на
+___
+___
+__Система Ремонтне Агенство(Агенство з Ремонту Автомобілів)__. Користувач може зареєструватися, створити заявку на
 ремонт автомобіля, залишити відгук про виконані роботи. Менеджер може прийняти заявку, вказавши ціну, або
 відхилити заявку, вказавши причину, переглянути активні замовлення, історію замовлень, список майстрів або клієнтів.
 Майстер може виконати (редагувати статус) прийняту менеджером заявку, переглянути свої активні замовлення або 
@@ -47,28 +49,28 @@ ___
 ___
 ### Інструкція з встановлення та запуску на локальному сервері (Tomcat):
 
-1. Встановіть JDK не нижче 8 версії.
+1. Встановіть JDK не нижче 8 версії. Встановіть змінні середовища для Java.
 2. Встановіть MySQl не нижче 8 версії та створіть користувача 'root' з паролем 123456789.
-3. Завантажте проект (зклонуйте через git (https://github.com/ShulzhenkoA/RepairAgency_spring.git) або завантажте
+3. Завантажте проект (зклонуйте через git (_https://github.com/ShulzhenkoA/RepairAgency_spring.git_) або завантажте
 проект та розархівуйте).
-4. Створіть базу даних та наповніть її, виконвши два SQL скріпти, що знаходяться в папці проекту 
-(/RepairAgency_spring/src/main/resources/database/CreateRepairAgencyDatabase.sql та 
-/RepairAgency_spring/src/main/resources/database/PopulateDB.sql).
-5. Відкрийте 'Командний рядок'(консоль) з папки проекту (RepairAgency_spring) або перейдать у 'Командному рядку' в папку проету 
-(RepairAgency_spring).
-6. >Виконайте в 'Командному рядку' команду: mvn spring-boot:run  
+4. Створіть базу даних та наповніть її, виконавши два SQL скріпти, що знаходяться в папці проекту 
+(/RepairAgency_spring/src/main/resources/database/__CreateRepairAgencyDatabase.sql__ та 
+/RepairAgency_spring/src/main/resources/database/__PopulateDB.sql__).
+5. Відкрийте _Командний рядок_ (консоль) з папки проекту (_RepairAgency_spring_) або перейдіть у _Командному рядку_ 
+до папки проету (_/RepairAgency_spring_), де міститься __pom.xml__.
+6. >Виконайте в _Командному рядку_ команду: __mvnw spring-boot:run__  
    
    Або  
 
-   >Виконайте в 'Командному рядку' по-порядку команди: 
-   >>mvn clean install  
-   >>cd target  
-   >>java -jar RepairAgency_spring-1.0.war
-7. Після завершення завантаження Spring перейдіть в браузері за посиланням http://localhost:8090/RepairAgency/home.
+   >Виконайте в _Командному рядку_ по-порядку команди: 
+   >>__mvnw clean install__  
+   >>__cd target__  
+   >>__java -jar RepairAgency_spring-1.0.war__
+7. Після завершення завантаження Spring перейдіть в браузері за посиланням __http://localhost:8090/CarRepairAgency/home__.
 8. Якщо виконано наповнення бази даних (пункт 4), то в системі вже існують:  
-    >Адміністратор - email: admin@mail.com, пароль: Admin123;  
-    Клієнт - email: customer@mail.com, пароль: Customer123;  
-    Майстер - email: master@mail.com, пароль: Master123;  
-    Менеджер - email: manager@mail.com, пароль: Manager123.  
-9. Щоб зупинити ситему в 'Командному рядку' натисніть ctrl+c+c
+    >Адміністратор - email: __admin@mail.com__, пароль: __Admin123__;  
+    Клієнт - email: __customer@mail.com__, пароль: __Customer123__;  
+    Майстер - email: __master@mail.com__, пароль: __Master123__;  
+    Менеджер - email: __manager@mail.com__, пароль: __Manager123__.  
+9. Щоб зупинити ситему в _Командному рядку_ натисніть __ctrl+c+c__
 
