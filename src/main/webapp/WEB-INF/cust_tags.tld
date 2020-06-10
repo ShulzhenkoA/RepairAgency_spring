@@ -6,7 +6,7 @@
     <short-name>cust_tags</short-name>
     <tag>
         <name>entity-page-counter</name>
-        <tag-class>ua.javaexternal_shulzhenko.repair_agency.tags.EntityNumOnPage</tag-class>
+        <tag-class>ua.javaexternal_shulzhenko.car_repair_agency.tags.EntityNumOnPage</tag-class>
         <body-content>scriptless</body-content>
         <attribute>
             <name>loop_count_num</name>
@@ -29,7 +29,7 @@
     </tag>
     <tag>
         <name>date-formatter</name>
-        <tag-class>ua.javaexternal_shulzhenko.repair_agency.tags.DateFormatter</tag-class>
+        <tag-class>ua.javaexternal_shulzhenko.car_repair_agency.tags.DateFormatter</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>localDateTime</name>

@@ -1,13 +1,13 @@
 <%@ tag pageEncoding="UTF-8" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.PaginationConstants" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.user.Role" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.order.OrderStatus" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.constants.PaginationConstants" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.entities.user.Role" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.entities.order.OrderStatus" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.constants.CRAPaths" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.entities.order.RepairType" %>
 <%@ attribute name="loop_num" required="true"
               type="java.lang.String" %>
 <%@ attribute name="order_object" required="true"
-              type="ua.javaexternal_shulzhenko.repair_agency.entities.order.Order" %>
+              type="ua.javaexternal_shulzhenko.car_repair_agency.entities.order.Order" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/cust_tags.tld" prefix="cust" %>

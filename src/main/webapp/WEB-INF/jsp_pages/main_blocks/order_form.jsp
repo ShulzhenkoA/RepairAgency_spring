@@ -1,9 +1,9 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
-<%@ page import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
+<%@ page import="ua.javaexternal_shulzhenko.car_repair_agency.constants.CRAPaths" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="cust" %>
-<%@ page import="ua.javaexternal_shulzhenko.repair_agency.entities.order.RepairType" %>
+<%@ page import="ua.javaexternal_shulzhenko.car_repair_agency.entities.order.RepairType" %>
 
 <fmt:setLocale value="${pageContext.response.locale}"/>
 <fmt:setBundle basename="cra_language"/>

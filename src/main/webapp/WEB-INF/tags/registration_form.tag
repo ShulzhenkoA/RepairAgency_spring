@@ -1,6 +1,6 @@
 <%@ tag pageEncoding="UTF-8" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.user.Role" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths"%>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.entities.user.Role" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.constants.CRAPaths"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>

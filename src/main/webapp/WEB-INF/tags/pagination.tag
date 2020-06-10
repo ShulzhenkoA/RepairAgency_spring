@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ attribute name="pagination_model" required="true"
-              type="ua.javaexternal_shulzhenko.repair_agency.entities.pagination.PaginationModel" %>
+              type="ua.javaexternal_shulzhenko.car_repair_agency.entities.pagination.PaginationModel" %>
 
 <fmt:setLocale value="${pageContext.response.locale}"/>
 <fmt:setBundle basename="cra_language"/>

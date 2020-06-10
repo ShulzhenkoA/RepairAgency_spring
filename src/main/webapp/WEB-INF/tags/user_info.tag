@@ -1,11 +1,11 @@
 <%@ tag pageEncoding="UTF-8"%>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.PaginationConstants" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.entities.user.Role" %>
-<%@ tag import="ua.javaexternal_shulzhenko.repair_agency.constants.CRAPaths" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.constants.PaginationConstants" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.entities.user.Role" %>
+<%@ tag import="ua.javaexternal_shulzhenko.car_repair_agency.constants.CRAPaths" %>
 <%@ attribute name="loop_num" required="true"
               type="java.lang.Integer" %>
 <%@ attribute name="user_for_mapping" required="true"
-              type="ua.javaexternal_shulzhenko.repair_agency.entities.user.User" %>
+              type="ua.javaexternal_shulzhenko.car_repair_agency.entities.user.User" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
